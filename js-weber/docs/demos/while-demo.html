@@ -1,0 +1,129 @@
+<html>
+<head>
+
+<script src="../../Utils.js"></script>
+<script src="../../Longtime.js"></script>
+
+<style>
+
+.div {
+	position: absolute;
+	left: 0;
+	color: white;
+	width: 50px;
+	height: 50px;
+}
+
+#container {
+	position: relative;
+}
+
+#div1 {
+	background-color: red;
+	top: 50px;
+}
+
+#div2 {
+	background-color: yellow;
+	color: black;
+	top: 110px;
+}
+
+#div3 {
+	background-color: green;
+	top: 170px;
+}
+
+#div4 {
+	background-color: blue;
+	top: 230px;
+}
+
+</style>
+
+</head>
+<body onload="bodyOnLoad();">
+<a href="../index.html">Back</a>
+<p>
+This demonstrates a "while" loop. The yellow box moves back and forth until the red box is finished moving to the right.
+After the red box is finished moving, the green box moves, then the blue box.
+</p>
+<input id="startBtn" value="Start" type="button" onclick="startBtnClicked();"/>
+
+<div id="container">
+<div id="div1" class="div">Process 1</div>
+<div id="div2" class="div">While loop box</div>
+<div id="div3" class="div">Final step 1</div>
+<div id="div4" class="div">Final step 2</div>
+</div>
+
+<script>
+
+var lib = importUtils(); for(var k in lib){window[k] = lib[k];}
+var lib = importLongTime(); for(var k in lib){window[k] = lib[k];}
+
+
+function bodyOnLoad()
+{
+	window.started = false;
+}
+
+
+function moveDiv(divNum, leftPx, animSeconds, nextStepSeconds, onDone)
+{
+	var elt = document.getElementById('div' + divNum);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = animSeconds * 1000 + 'ms';
+	elt.style.left = leftPx + 'px';
+	setTimeout(onDone, nextStepSeconds * 1000);
+}
+
+
+
+function startBtnClicked()
+{
+	if(window.started){return;}
+	window.started = true;
+	
+	var system = {running: true};
+	
+	runSteps({system: system},
+	[
+		function()
+		{
+			var callbackSystem = this.system;
+			moveDiv(1, 600, 10, 10, function(){callbackSystem.running = false;});
+			this.nextStepCallback();
+		},
+		Stepper.STARTWHILE,
+		function()
+		{
+			this.stepper.WHILE(this.system.running);
+		},
+			function()
+			{
+				moveDiv(2, 600, 1, 1, this.nextStepCallback);
+			},
+			function()
+			{
+				moveDiv(2, 0, 1, 1, this.nextStepCallback);
+			},
+		Stepper.ENDWHILE,
+		function()
+		{
+			moveDiv(3, 600, 5, 5, this.nextStepCallback);
+		},
+		function()
+		{
+			moveDiv(4, 600, 5, 5, this.nextStepCallback);
+		}
+	]);
+	
+}
+
+
+</script>
+
+
+</body>
+</html>

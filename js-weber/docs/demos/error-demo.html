@@ -1,0 +1,141 @@
+<html>
+<head>
+
+<script src="../Utils.js"></script>
+<script src="../Longtime.js"></script>
+
+<style>
+
+.div {
+	position: absolute;
+	left: 0;
+	color: white;
+	width: 100px;
+	height: 100px;
+}
+
+#div1 {
+	background-color: red;
+	top: 100px;
+}
+
+#div2 {
+	background-color: yellow;
+	top: 210px;
+	color: black;
+}
+
+#div3 {
+	background-color: green;
+	top: 320px;
+}
+
+#div4 {
+	background-color: blue;
+	top: 430px;
+}
+</style>
+
+</head>
+<body onload="bodyOnLoad();">
+
+<p>
+This demo shows error handling. A process is started to move the red block.
+If the process succeeds, the yellow block is moved, and when done, the green block is moved.
+If the process fails the red block only moves half way,
+then the blue block moves, representing the error handling process.
+</p>
+
+<input id="startBtn" value="Start (success)" type="button" onclick="startBtnClicked(true);"/>
+<input id="startBtnFail" value="Start (failure)" type="button" onclick="startBtnClicked(false);"/>
+
+<div id="div1" class="div">Process 1</div>
+<div id="div2" class="div">Process 2</div>
+<div id="div3" class="div">Process 3</div>
+<div id="div4" class="div">Error Handling Process</div>
+
+<script>
+
+var lib = importUtils(); for(var k in lib){window[k] = lib[k];}
+var lib = importLongTime(); for(var k in lib){window[k] = lib[k];}
+
+var started = false;
+
+function bodyOnLoad()
+{
+	
+}
+
+
+function startBtnClicked(success)
+{
+	if(started){return;}
+	var system = {success: success};
+	
+	runSteps(
+		{system: system},
+		[
+			function()
+			{				
+				this.system.process1 = new Process1(this.system.success);
+				this.system.process1.start(this.nextStepCallback);
+			},
+			function(success)
+			{
+				if(success)
+				{
+					runSteps(
+						{system: this.system},
+						[
+							function()
+							{
+								moveDiv(2, 600, 3, 3, this.nextStepCallback);
+							},
+							function(){
+								moveDiv(3, 600, 3, 3, this.nextStepCallback);
+							}
+						]
+					);
+				}
+				else
+				{
+					moveDiv(4, 600, 3, 3, this.nextStepCallback);
+				}
+			}
+		]
+	);
+	
+}
+
+function Process1(success) // constructor
+{
+	this.success = success;
+}
+
+Process1.prototype.start = function(callback)
+{
+	if(this.success)
+	{
+		moveDiv(1, 600, 3, 3, function(){callback(true);});
+	}
+	else
+	{
+		moveDiv(1, 300, 3, 3, function(){callback(false);});
+	}
+}
+
+
+function moveDiv(divNum, leftPx, animSeconds, nextStepSeconds, onDone)
+{
+	var elt = document.getElementById('div' + divNum);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = animSeconds * 1000 + 'ms';
+	elt.style.left = leftPx + 'px';
+	setTimeout(onDone, nextStepSeconds * 1000);
+}
+
+</script>
+
+
+</body>
+</html>

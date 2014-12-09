@@ -1,0 +1,7 @@
+
+
+function wasScriptLoaded()
+{
+	alert('loaded!');
+}
+

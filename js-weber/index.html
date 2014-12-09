@@ -1,0 +1,249 @@
+<html>
+<head>
+
+<script src="Sys.js"></script>
+<script src="Utils.js"></script>
+<script src="HtmlUtils.js"></script>
+
+
+</head>
+<body onload="bodyOnLoad();">
+
+Asdf
+Asdf
+
+
+
+
+<script>
+
+/*
+var SysNode = importSys().SysNode;
+
+var sysNode1 = new SysNode();
+sysNode1.myEvent = function(event, data)
+{
+	alert('sysNode1 in event ' + (event.upstream ? 'upstream' : 'downstream'));
+};
+
+var sysNode2 = new SysNode();
+sysNode2.myEvent = function(event, data)
+{
+	alert('sysNode2 in event ' + (event.upstream ? 'upstream' : 'downstream'));
+};
+
+sysNode2.parent = sysNode1;
+sysNode2.event('myEvent', {});
+*/
+
+
+function importSysTest()
+{
+	if(importSysTest.lib){return importSysTest.lib;}
+	
+	function testDataReq()
+	{
+		var trace = '';
+		var Sys = importSys();
+
+		var obj1 = new Object();
+		obj1.as = new Object();
+		obj1.as.SysNode = new Sys.SysNode();
+		obj1.as.SysNode.mainObj = obj1;
+
+		obj1.as.SysNode.handleDataReq = function(dataReq)
+		{
+			setTimeout(
+				function(){dataReq.fillCallback('obj1FilledDataRequest');},
+				100
+			);
+		}
+
+		var obj2 = new Object();
+		obj2.as = new Object();
+		obj2.as.SysNode = new Sys.SysNode();
+		obj2.as.SysNode.mainObj = obj2;
+		obj2.as.SysNode.parent = obj1.as.SysNode;
+
+		obj2.as.SysNode.handleDataReq = function(dataReq)
+		{
+			setTimeout(
+				function(){dataReq.noFillCallback();},
+				100
+			);
+		}
+
+		var obj3 = new Object();
+		obj3.as = new Object();
+		obj3.as.SysNode = new Sys.SysNode();
+		obj3.as.SysNode.mainObj = obj3;
+		obj3.as.SysNode.parent = obj2.as.SysNode;
+
+		obj3.as.SysNode.handleDataReq = function(dataReq)
+		{
+			if(dataReq.requester == this)
+			{
+				dataReq.noFillCallback();
+			}
+		}
+
+		obj3.as.SysNode.dataReq(
+			'myData',
+			function(data)
+			{
+				trace += data;
+				if(trace != 'obj1FilledDataRequest'){alert('error! In testDataReq #1');}
+			},
+			function()
+			{
+				if(trace != 'obj1FilledDataRequest'){alert('error! In testDataReq #2');}
+			}
+		);
+	}
+	
+	function testDataReqAbort()
+	{
+		var trace = '';
+		var Sys = importSys();
+
+		var obj1 = new Object();
+		obj1.as = new Object();
+		obj1.as.SysNode = new Sys.SysNode();
+		obj1.as.SysNode.mainObj = obj1;
+
+		obj1.as.SysNode.handleDataReq = function(dataReq)
+		{
+			setTimeout(
+				function(){dataReq.fillCallback('obj1FilledDataRequest');},
+				1000
+			);
+		}
+
+		var obj2 = new Object();
+		obj2.as = new Object();
+		obj2.as.SysNode = new Sys.SysNode();
+		obj2.as.SysNode.mainObj = obj2;
+		obj2.as.SysNode.parent = obj1.as.SysNode;
+
+		obj2.as.SysNode.handleDataReq = function(dataReq)
+		{
+			setTimeout(
+				function(){dataReq.noFillCallback();},
+				1000
+			);
+		}
+
+		var obj3 = new Object();
+		obj3.as = new Object();
+		obj3.as.SysNode = new Sys.SysNode();
+		obj3.as.SysNode.mainObj = obj3;
+		obj3.as.SysNode.parent = obj2.as.SysNode;
+
+		obj3.as.SysNode.handleDataReq = function(dataReq)
+		{
+			if(dataReq.requester == this)
+			{
+				dataReq.noFillCallback();
+			}
+		}
+		
+		var dataReq = obj3.as.SysNode.dataReq(
+			'myData',
+			function(data)
+			{
+				trace += data;
+				if(trace == 'obj1FilledDataRequest'){alert('error! In testDataReqAbort #1');}
+			},
+			function()
+			{
+				if(trace == 'obj1FilledDataRequest'){alert('error! In testDataReqAbort #2');}
+				trace += 'noFillCallback';
+			}
+		);
+		
+		dataReq.abort();
+		if(trace != 'noFillCallback'){alert('error! In testDataReqAbort #3');}
+	}
+	
+	function test()
+	{
+		testDataReq();
+		testDataReqAbort();
+		console.log('SysTest done');
+	}
+	
+	return importSysTest.lib = 
+	{
+		test: test
+	}
+}
+
+function importUtilsTest()
+{
+	if(importUtilsTest.lib){return importUtilsTest.lib;}
+	
+	function testListeners()
+	{
+		var Utils = importUtils();
+		var output = '';
+		var obj = new Object();
+		var cb2 = function(){output += 'listener2';};
+		Utils.addListener(obj, 'myEvent', function(){output += 'listener1';});
+		Utils.addListener(obj, 'myEvent', cb2);
+		Utils.addListener(obj, 'myEvent', function(){output += 'listener3';});
+		Utils.remListener(obj, 'myEvent', cb2)
+		obj.myEvent();
+		if(output != 'listener1listener3'){alert('error with importUtilsTest');}
+	}
+	
+	function test()
+	{
+		testListeners();
+	}
+	
+	return importUtilsTest.lib = 
+	{
+		test: test
+	};
+}
+
+
+function importHtmlUtilsTest()
+{
+	if(importHtmlUtilsTest.lib){return importHtmlUtilsTest.lib;}
+	
+	var HtmlUtils = importHtmlUtils();
+	
+	function testLoadScript()
+	{
+		console.log('testLoadScript');
+		HtmlUtils.loadScript('scriptToLoad.js', 1, 
+			function(){alert('loaded script!');}, 
+			function(){alert('failed to load script!');}
+		);
+	}
+	
+	function test()
+	{
+		testLoadScript();
+	}
+	
+	return importHtmlUtilsTest.lib = 
+	{
+		test: test
+	}
+}
+
+
+function bodyOnLoad()
+{
+	importSysTest().test();
+	importUtilsTest().test();
+	importHtmlUtilsTest().test();
+}
+
+</script>
+
+
+</body>
+</html>

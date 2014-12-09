@@ -1,0 +1,195 @@
+<html>
+<head>
+
+<script src="../../Utils.js"></script>
+<script src="../../Longtime.js"></script>
+
+<style>
+
+.div {
+	position: absolute;
+	left: 0;
+	color: white;
+	width: 50px;
+	height: 50px;
+	font-size: 12px;
+}
+
+#container {
+	position: relative;
+}
+
+#div1 {
+	background-color: red;
+	top: 50px;
+}
+
+#div2 {
+	background-color: magenta;
+	color: black;
+	top: 110px;
+}
+
+#div3 {
+	background-color: green;
+	top: 170px;
+}
+
+#div4 {
+	background-color: yellow;
+	color: black;
+	top: 230px;
+}
+
+#div5 {
+	background-color: cyan;
+	color: black;
+	top: 290px;
+}
+
+#div6 {
+	background-color: blue;
+	top: 350px;
+}
+
+#div7 {
+	background-color: #ff3333;
+	top: 410px;
+}
+
+#div8 {
+	background-color: #ff7777;
+	color: black;
+	top: 470px;
+}
+</style>
+
+</head>
+<body onload="bodyOnLoad();">
+<a href="../index.html">Back</a>
+<p>
+This demonstrates a nested if-else conditional. Process 1 attempts to move the red box all the way right. 
+The green box is only moved on total success. The blue boxes are only moved on total failure.
+</p>
+
+<input value="Start (total success)"   type="button" onclick="startBtnClicked(true, true);"/>
+<input value="Start (partial success)" type="button" onclick="startBtnClicked(true, false);"/>
+<input value="Start (failure)"         type="button" onclick="startBtnClicked(false, false);"/>
+
+<div id="container">
+<div id="div1" class="div">Process 1</div>
+<div id="div2" class="div">Partial or Full Success</div>
+<div id="div3" class="div">Only Full Success</div>
+<div id="div4" class="div">Partial or Full Success</div>
+<div id="div5" class="div">Failure Step 1</div>
+<div id="div6" class="div">Failure Step 2</div>
+<div id="div7" class="div">Final Step 1</div>
+<div id="div8" class="div">Final Step 2</div>
+</div>
+
+<script>
+
+var lib = importUtils(); for(var k in lib){window[k] = lib[k];}
+var lib = importLongTime(); for(var k in lib){window[k] = lib[k];}
+
+
+function bodyOnLoad()
+{
+	window.started = false;
+}
+
+
+function moveDiv(divNum, leftPx, animSeconds, nextStepSeconds, onDone)
+{
+	var elt = document.getElementById('div' + divNum);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = animSeconds * 1000 + 'ms';
+	elt.style.left = leftPx + 'px';
+	setTimeout(onDone, nextStepSeconds * 1000);
+}
+
+
+function startBtnClicked(outerSuccess, innerSuccess)
+{
+	if(window.started){return;}
+	window.started = true;
+	
+	var system = {outerSuccess: outerSuccess, innerSuccess: innerSuccess};
+	
+	runSteps({system: system},
+	[
+		function()
+		{
+			this.system.process1 = new Process1(this.system.outerSuccess);
+			this.system.process1.start(this.nextStepCallback);
+		},
+		Stepper.STARTIF,
+		function(success)
+		{
+			this.stepper.IF(success);
+		},
+			function()
+			{
+				moveDiv(2, 600, 3, 3, this.nextStepCallback);
+			},
+			Stepper.STARTIF,
+				function()
+				{
+					this.stepper.IF(this.system.innerSuccess);
+				},
+				function()
+				{
+					moveDiv(3, 600, 3, 3, this.nextStepCallback);
+				},
+			Stepper.ENDIF,
+			function()
+			{
+				moveDiv(4, 600, 3, 3, this.nextStepCallback);
+			},
+		Stepper.ELSE,
+			function()
+			{
+				moveDiv(5, 600, 3, 3, this.nextStepCallback);
+			},
+			function()
+			{
+				moveDiv(6, 600, 3, 3, this.nextStepCallback);
+			},
+		Stepper.ENDIF,
+		function()
+		{
+			moveDiv(7, 600, 3, 3, this.nextStepCallback);
+		},
+		function()
+		{
+			moveDiv(8, 600, 3, 3, this.nextStepCallback);
+		}
+	]);
+	
+}
+
+
+function Process1(success)
+{
+	this.success = success;
+}
+
+
+Process1.prototype.start = function(callback)
+{
+	if(this.success)
+	{
+		moveDiv(1, 600, 3, 3, function(){callback(true);});
+	}
+	else
+	{
+		moveDiv(1, 300, 3, 3, function(){callback(false);});
+	}
+}
+
+
+</script>
+
+
+</body>
+</html>

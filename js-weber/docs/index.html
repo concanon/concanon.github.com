@@ -1,0 +1,76 @@
+<html>
+<head>
+</head>
+
+<body>
+<h1>Longtime Programming</h1>
+<h2>Intro</h2>
+<p>
+Let's think for a moment about an ATM (automatic teller machine) program
+where a user is presented with a menu screen asking if they'd like to deposit, withdraw
+or exit. When the user chooses deposit or withdraw, they're taken to another screen where
+their transaction is processed, then they click 'OK' button, and they return to the menu screeen.
+They can do as many transactions as they want, until they choose exit from the menu, and their session ends.
+</p>
+
+<p>
+We might write pseudocode for the software like this:
+</p>
+
+<pre>
+transactionsDone = false
+
+while(!transactionsDone)
+{
+	choice = showMenu()
+	
+	if(choice == deposit)
+		runDepositScreen()
+	else if(choice == withdraw)
+		runWithdrawScreen()
+	else if(choice == exit)
+		transactionsDone = true
+}
+</pre>
+
+<p>
+The pseudocode makes sense and is understandable, but wait! We can't program the app in this way!
+Why not? Well, because the deposit and withdrawal screen take a long time to execute. 
+Our JavaScript programming language is based on the idea that each statement takes a very short time to execute and
+then the program goes promptly to the next step.
+</p>
+
+<p>
+That's where Longtime Programming comes in. Longtime programming is an attempt to make pseudocode like the above example
+translate into real code as closely as possible.
+</p>
+
+<h2>ATM Demo</h2>
+
+<p>
+Here's an example of an ATM machine programmed with longtime programming:
+</p>
+
+<a href="demos/atm-demo.html">ATM Machine Demo</a><br>
+
+<p>
+The source code shows one while loop nested inside another, however the loops are implemented as an 
+array of anonymous function definitions combined with special flags such as Stepper.STARTWHILE.
+A simpler while loop demo is below, where the structure of the loop may be more easily seen:
+</p>
+
+<a href="demos/while-demo.html">While loop demo</a><br>
+
+<p>
+"If" control structures are also implemented in the longtime library, to support cases where it's desired to conditionally
+execute code:
+</p>
+
+<a href="demos/if-demo.html">"If" control structure demo</a><br>
+
+<p>
+Longtime programming has applications for animation, architecture, and services.
+</p>
+
+</body>	
+</htmL>

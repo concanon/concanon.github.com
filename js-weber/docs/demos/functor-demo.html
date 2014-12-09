@@ -1,0 +1,39 @@
+<html>
+<head>
+
+<script src="../Utils.js"></script>
+<script src="../Longtime.js"></script>
+
+<style>
+
+</style>
+
+</head>
+<body onload="bodyOnLoad();">
+
+
+
+<script>
+
+var lib = importUtils(); for(var k in lib){window[k] = lib[k];}
+
+
+function bodyOnLoad()
+{
+	var f = makeFunctor(
+		{num: 3}, 
+		function(numToAdd){return numToAdd + this.num;}
+	);
+	
+	alert(f(3));
+	f.num = 5;
+	alert(f(3));
+}
+
+
+
+</script>
+
+
+</body>
+</html>

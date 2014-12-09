@@ -1,0 +1,254 @@
+<html>
+<head>
+
+<script src="../../Utils.js"></script>
+<script src="../../Longtime.js"></script>
+
+<style>
+#atmScreen {
+	border: 3px solid grey;
+	display: inline-block;
+	width: 600px;
+	height: 400px;
+	font-size: 20px;
+	color: white;
+	background-color: black;
+	text-align: center;
+}
+
+</style>
+
+</head>
+<body onload="bodyOnLoad();">
+<a href="../index.html">Back</a>
+<p>
+This is a demo of how an ATM (automatic teller machine) may be programmed using longtime while loops.
+Several seconds after exiting a session, the ATM will begin again for the next customer.
+</p>
+
+
+<div id="atmScreen"></div>
+
+<script>
+
+var lib = importUtils(); for(var k in lib){window[k] = lib[k];}
+var lib = importLongTime(); for(var k in lib){window[k] = lib[k];}
+
+
+function bodyOnLoad()
+{	
+	window.atm = new Atm();
+	
+	runSteps({atm: window.atm},
+	[
+		Stepper.STARTWHILE,
+		function()
+		{
+			this.stepper.WHILE(true);
+		},
+			function()
+			{
+				this.atm.transactionsDone = false;
+				this.atm.startScreen(this.atm.welcomeScreen, this.nextStepCallback);
+			},
+			Stepper.STARTWHILE,
+				function()
+				{
+					this.stepper.WHILE(!this.atm.transactionsDone);
+				},
+				function()
+				{
+					this.atm.startScreen(this.atm.menuScreen, this.nextStepCallback);
+				},
+				function(chosenScreen)
+				{
+					switch(chosenScreen)
+					{
+						case 'deposit':
+							this.atm.startScreen(this.atm.depositScreen, this.nextStepCallback);
+							break;
+						
+						case 'withdrawal':
+							this.atm.startScreen(this.atm.withdrawalScreen, this.nextStepCallback);
+							break;
+							
+						case 'exit':
+							this.atm.transactionsDone = true;
+							this.nextStepCallback();
+							break;
+					}
+				},
+			Stepper.ENDWHILE,
+			function()
+			{
+				this.atm.startScreen(this.atm.exitScreen, this.nextStepCallback);
+			},
+		Stepper.ENDWHILE
+	]);
+	
+}
+
+
+function Atm()
+{
+	this.screenElt = document.getElementById('atmScreen');
+	this.transactionsDone = false;
+	this.welcomeScreen = new WelcomeScreen();
+	this.menuScreen = new MenuScreen();
+	this.depositScreen = new DepositScreen();
+	this.withdrawalScreen = new WithdrawalScreen();
+	this.exitScreen = new ExitScreen();
+}
+
+Atm.prototype.startScreen = function(screen, callback)
+{
+	this.currentScreen = screen;
+	
+	if(this.screenElt.firstChild)
+	{this.screenElt.removeChild(this.screenElt.firstChild);}
+	
+	this.screenElt.appendChild(screen.elt);
+	screen.start(callback);
+}
+
+// WelcomeScreen //
+function WelcomeScreen()
+{
+	var cbScreen = this;
+	this.elt = document.createElement('div');
+	this.elt.innerHTML = 'Welcome to Demo Bank ATM Machine<br>';
+	this.startBtn = document.createElement('input');
+	this.startBtn.type = 'button'
+	this.startBtn.value = 'Start'
+	this.startBtn.onclick = function(){cbScreen.startBtnClicked();};
+	this.elt.appendChild(this.startBtn);
+}
+
+WelcomeScreen.prototype.start = function(doneCallback)
+{
+	this.doneCallback = doneCallback;
+}
+
+WelcomeScreen.prototype.startBtnClicked = function()
+{
+	this.doneCallback();
+}
+// End WelcomeScreen //
+
+// Menu Screen //
+
+function MenuScreen() // constructor
+{
+	var cbScreen = this;
+	this.elt = document.createElement('div');
+	this.elt.innerHTML = 'What would you like to do?<br>';
+	this.depositBtn = document.createElement('input');
+	this.depositBtn.type = 'button';
+	this.depositBtn.value = 'Deposit';
+	this.depositBtn.onclick = function(){cbScreen.depositBtnClicked();};
+	this.elt.appendChild(this.depositBtn);
+	
+	this.withdrawalBtn = document.createElement('input');
+	this.withdrawalBtn.type = 'button';
+	this.withdrawalBtn.value = 'Withdrawal';
+	this.withdrawalBtn.onclick = function(){cbScreen.withdrawalBtnClicked();};
+	this.elt.appendChild(this.withdrawalBtn);
+	
+	this.exitBtn = document.createElement('input');
+	this.exitBtn.type = 'button';
+	this.exitBtn.value = 'Exit';
+	this.exitBtn.onclick = function(){cbScreen.exitBtnClicked();};
+	this.elt.appendChild(this.exitBtn);
+}
+
+MenuScreen.prototype.start = function(doneCallback)
+{
+	this.doneCallback = doneCallback;
+}
+
+MenuScreen.prototype.depositBtnClicked = function()
+{
+	this.doneCallback('deposit');
+}
+
+MenuScreen.prototype.withdrawalBtnClicked = function()
+{
+	this.doneCallback('withdrawal');
+}
+
+MenuScreen.prototype.exitBtnClicked = function()
+{
+	this.doneCallback('exit');
+}
+// End Menu Screen //
+
+// DepositScreen //
+function DepositScreen()
+{
+	var cbScreen = this;
+	this.elt = document.createElement('div');
+	this.elt.innerHTML = 'Your deposit is complete<br>';
+	
+	this.exitBtn = document.createElement('input');
+	this.exitBtn.type = 'button';
+	this.exitBtn.value = 'OK';
+	this.exitBtn.onclick = function(){cbScreen.exitBtnClicked();};
+	this.elt.appendChild(this.exitBtn);
+}
+
+DepositScreen.prototype.start = function(doneCallback)
+{
+	this.doneCallback = doneCallback;
+}
+
+DepositScreen.prototype.exitBtnClicked = function()
+{
+	this.doneCallback('exit');
+}
+// End DepositScreen //
+
+
+// WithdrawalScreen //
+function WithdrawalScreen()
+{
+	var cbScreen = this;
+	this.elt = document.createElement('div');
+	this.elt.innerHTML = 'Your withdrawal is complete<br>';
+	
+	this.exitBtn = document.createElement('input');
+	this.exitBtn.type = 'button';
+	this.exitBtn.value = 'OK';
+	this.exitBtn.onclick = function(){cbScreen.exitBtnClicked();};
+	this.elt.appendChild(this.exitBtn);
+}
+
+WithdrawalScreen.prototype.start = function(doneCallback)
+{
+	this.doneCallback = doneCallback;
+}
+
+WithdrawalScreen.prototype.exitBtnClicked = function()
+{
+	this.doneCallback('exit');
+}
+// End WithdrawalScreen //
+
+
+// ExitScreen //
+function ExitScreen()
+{
+	this.elt = document.createElement('div');
+	this.elt.innerHTML = 'Thank you for using Demo Bank ATM<br>';
+}
+
+ExitScreen.prototype.start = function(doneCallback)
+{
+	setTimeout(doneCallback, 5000);
+}
+// End ExitScreen //
+
+</script>
+
+
+</body>
+</html>

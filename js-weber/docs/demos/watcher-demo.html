@@ -1,0 +1,103 @@
+<html>
+<head>
+
+<script src="../Utils.js"></script>
+<script src="../Longtime.js"></script>
+
+<style>
+#div1 {
+	position: absolute;
+	left: 0;
+	top: 100px;
+	background-color: red;
+	color: white;
+	width: 100px;
+	height: 100px;
+}
+
+#div2 {
+	position: absolute;
+	left: 0;
+	top: 210px;
+	background-color: yellow;
+	color: white;
+	width: 100px;
+	height: 100px;
+}
+
+#div3 {
+	position: absolute;
+	left: 0;
+	top: 320px;
+	background-color: green;
+	color: white;
+	width: 100px;
+	height: 100px;
+}
+</style>
+
+</head>
+<body onload="bodyOnLoad();">
+
+<input id="startBtn" value="Start" type="button" onclick="startBtnClicked();"/>
+
+<div id="div1"></div>
+<div id="div2"></div>
+<div id="div3"></div>
+
+<script>
+
+var lib = importUtils(); for(var k in lib){window[k] = lib[k];}
+var lib = importLongTime(); for(var k in lib){window[k] = lib[k];}
+
+
+function bodyOnLoad()
+{
+	
+}
+
+
+function moveDiv(divNum, leftPx, animSeconds, nextStepSeconds, onDone)
+{
+	var elt = document.getElementById('div' + divNum);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = animSeconds * 1000 + 'ms';
+	elt.style.left = leftPx + 'px';
+	setTimeout(onDone, nextStepSeconds * 1000);
+}
+
+
+
+function startBtnClicked()
+{
+	
+	runSteps(
+		{},
+		[
+			function()
+			{
+				this.watcher = new Watcher();
+				var callback1 = this.watcher.makeCallback();
+				var callback2 = this.watcher.makeCallback();
+				this.watcher.doneEvent = this.nextStepCallback;
+				
+				moveDiv(1, 600, 4, 4, callback1);
+				moveDiv(2, 600, 4, 4, callback2);
+			},
+			function()
+			{
+				moveDiv(3, 600, 4, 4, this.nextStepCallback);
+			}
+		]
+	);
+	
+}
+
+
+
+
+</script>
+
+
+</body>
+</html>
