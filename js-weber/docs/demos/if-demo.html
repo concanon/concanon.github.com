@@ -6,6 +6,20 @@
 
 <style>
 
+body {
+	text-align: center;
+}
+
+.contentArea {
+	background-color: #eee;
+	color: #222;
+	border-radius: 5px;
+	display: inline-block;
+	width: 40em;
+	padding: 3em;
+	text-align: left;
+}
+
 .div {
 	position: absolute;
 	left: 0;
@@ -16,6 +30,8 @@
 
 #container {
 	position: relative;
+	margin-left: 100px;
+	height: 500px;
 }
 
 #div1 {
@@ -58,15 +74,21 @@
 
 </head>
 <body onload="bodyOnLoad();">
+<div class="contentArea">
 <a href="../index.html">Back</a>
+<h1>If-Else Conditional Demo</h1>
 <p>
 This demonstrates an if-else conditional. Process 1 attempts to move the red box all the way right. 
 If it's successful, two success steps are taken and two failure steps are skipped. 
 If process 1 is unsuccessful, the two success steps are skipped and the two failure steps are taken.
 Two final steps are taken in any case.
 </p>
+<p>
+View page source to see what the code looks like.
+</p>
 <input id="startBtn" value="Start (success)" type="button" onclick="startBtnClicked(true);"/>
 <input id="startBtnFail" value="Start (failure)" type="button" onclick="startBtnClicked(false);"/>
+</div>
 
 <div id="container">
 <div id="div1" class="div">Process 1</div>
@@ -169,7 +191,6 @@ Process1.prototype.start = function(callback)
 
 
 </script>
-
 
 </body>
 </html>
