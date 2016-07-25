@@ -42,11 +42,18 @@ body {
 <a href="../index.html">Back</a>
 <h1>ATM Demo</h1>
 <p>
-This is a demo of how an ATM (automatic teller machine) may be programmed using longtime while loops.
-Several seconds after exiting a session, the ATM will begin again for the next customer. 
+This is a demo of how an ATM (automatic teller machine) may be programmed using Longtime while loops.
+Several seconds after exiting a session, the ATM will reset and wait for the next customer.
+</p>
+<p>
+The source code shows one while loop nested inside another, where the loops are implemented within an 
+array of anonymous function and special flags such as Stepper.STARTWHILE.
 View source to see what the code looks like.
 </p>
 
+<p>
+
+</p>
 
 <div id="atmScreen"></div>
 
@@ -59,29 +66,32 @@ function bodyOnLoad()
 	var lib = importLongTime(); for(var k in lib){window[k] = lib[k];}
 
 	window.atm = new Atm();
-	
+
+	// within the anonymous "step" functions below, "this" refers to a special Stepper object 
+	// which also contains the properties of the first argument to runSteps
 	runSteps({atm: window.atm},
 	[
-		Stepper.STARTWHILE,
+		Stepper.STARTWHILE, // flag indicates start of a while loop
 		function()
 		{
-			this.stepper.WHILE(true);
+			this.stepper.WHILE(true); // the while loop's conditional expression
 		},
 			function()
 			{
+				// wait for a new customer session
 				this.atm.transactionsDone = false;
 				this.atm.startScreen(this.atm.welcomeScreen, this.nextStepCallback);
 			},
-			Stepper.STARTWHILE,
-				function()
-				{
-					this.stepper.WHILE(!this.atm.transactionsDone);
-				},
+			Stepper.STARTWHILE, // start the nested while loop to loop through the customer's transactions
+			function()
+			{
+				this.stepper.WHILE(!this.atm.transactionsDone); // nested while loop's conditional expression
+			},
 				function()
 				{
 					this.atm.startScreen(this.atm.menuScreen, this.nextStepCallback);
 				},
-				function(chosenScreen)
+				function(chosenScreen) // this function will be passed the argument to the previous step's callback
 				{
 					switch(chosenScreen)
 					{
@@ -99,17 +109,18 @@ function bodyOnLoad()
 							break;
 					}
 				},
-			Stepper.ENDWHILE,
+			Stepper.ENDWHILE, // end the nested loop
 			function()
 			{
-				this.atm.startScreen(this.atm.exitScreen, this.nextStepCallback);
+				this.atm.startScreen(this.atm.exitScreen, this.nextStepCallback); // show the exit screen
 			},
-		Stepper.ENDWHILE
+		Stepper.ENDWHILE  // end the outer loop
 	]);
 	
 }
 
 
+// Atm Class
 function Atm()
 {
 	this.screenElt = document.getElementById('atmScreen');
@@ -124,15 +135,16 @@ function Atm()
 Atm.prototype.startScreen = function(screen, callback)
 {
 	this.currentScreen = screen;
-	
+
 	if(this.screenElt.firstChild)
 	{this.screenElt.removeChild(this.screenElt.firstChild);}
-	
+
 	this.screenElt.appendChild(screen.elt);
 	screen.start(callback);
 }
 
-// WelcomeScreen //
+
+// WelcomeScreen Class
 function WelcomeScreen()
 {
 	var cbScreen = this;
@@ -154,11 +166,10 @@ WelcomeScreen.prototype.startBtnClicked = function()
 {
 	this.doneCallback();
 }
-// End WelcomeScreen //
 
-// Menu Screen //
 
-function MenuScreen() // constructor
+// MenuScreen Class
+function MenuScreen()
 {
 	var cbScreen = this;
 	this.elt = document.createElement('div');
@@ -174,7 +185,7 @@ function MenuScreen() // constructor
 	this.withdrawalBtn.value = 'Withdrawal';
 	this.withdrawalBtn.onclick = function(){cbScreen.withdrawalBtnClicked();};
 	this.elt.appendChild(this.withdrawalBtn);
-	
+
 	this.exitBtn = document.createElement('input');
 	this.exitBtn.type = 'button';
 	this.exitBtn.value = 'Exit';
@@ -201,9 +212,9 @@ MenuScreen.prototype.exitBtnClicked = function()
 {
 	this.doneCallback('exit');
 }
-// End Menu Screen //
 
-// DepositScreen //
+
+// DepositScreen Class
 function DepositScreen()
 {
 	var cbScreen = this;
@@ -226,10 +237,9 @@ DepositScreen.prototype.exitBtnClicked = function()
 {
 	this.doneCallback('exit');
 }
-// End DepositScreen //
 
 
-// WithdrawalScreen //
+// WithdrawalScreen Class
 function WithdrawalScreen()
 {
 	var cbScreen = this;
@@ -252,10 +262,9 @@ WithdrawalScreen.prototype.exitBtnClicked = function()
 {
 	this.doneCallback('exit');
 }
-// End WithdrawalScreen //
 
 
-// ExitScreen //
+// ExitScreen Class
 function ExitScreen()
 {
 	this.elt = document.createElement('div');
@@ -266,7 +275,6 @@ ExitScreen.prototype.start = function(doneCallback)
 {
 	setTimeout(doneCallback, 5000);
 }
-// End ExitScreen //
 
 </script>
 

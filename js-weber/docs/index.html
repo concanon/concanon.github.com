@@ -28,50 +28,72 @@ body {
 
 <div class="contentArea">
 
+<a href="/">back</a>
+
 <h1>Longtime Programming</h1>
 <h2>Intro</h2>
 <p>
-Let's think for a moment about an ATM (automatic teller machine) program
-where a user is presented with a menu screen asking if they'd like to deposit, withdraw
-or exit. When the user chooses deposit or withdraw, they're taken to another screen where
-their transaction is processed, then they click an 'OK' button, and they return to the menu screen.
-They can do as many transactions as they want, until they choose exit from the menu, and their session ends.
+"Longtime" programming is an idea that came to mind to help with writing JavaScript programs
+such as user interfaces, where a program follows an overall logical path, 
+however long amounts of time elapse between the points in the program where control flow changes direction.
+This Longtime programming demo is meant to be an exploration of a possible language feature,
+and a proof of concept.
 </p>
 
 <p>
-We might write pseudocode for the software like this:
+As an example application of Longtime programming, let's think for a moment about an 
+ATM (automatic teller machine)
+where a user is presented with a menu screen asking if they'd like to deposit, withdraw
+or exit. When the user chooses deposit or withdraw, they're taken to another screen where
+their transaction is processed, then they click an 'OK' button to return to the menu screen.
+They can do as many transactions as they want, until they choose exit from the menu, and 
+then their session ends. The program then waits for the next customer.
+</p>
+
+<p>
+We might write pseudocode for the program like this:
 </p>
 
 <pre><code>
-transactionsDone = false
 
-while(!transactionsDone)
+while(true) // loop for multiple customers
 {
-	choice = showMenu()
-	
-	if(choice == deposit)
-		runDepositScreen()
-	else if(choice == withdraw)
-		runWithdrawScreen()
-	else if(choice == exit)
-		transactionsDone = true
+	transactionsDone = false
+
+	while(!transactionsDone) // loop to do this customer's transactions
+	{
+		choice = showMenu()
+		
+		if(choice == deposit)
+			runDepositScreen()
+		else if(choice == withdraw)
+			runWithdrawScreen()
+		else if(choice == exit)
+			transactionsDone = true
+	}
 }
 
 </code></pre>
 
 <p>
-The pseudocode makes sense and is understandable, but wait! We can't program the app in this way!
-Why not? Well, because the deposit and withdrawal screen take a long time to execute. 
-Our JavaScript programming language is based on the idea that each statement takes a very short time to execute and
-then the program goes promptly to the next step.
+The pseudocode makes sense and is understandable, but wait! We can't program the app with code that resembles the pseudocode!
+Why not? Because the deposit and withdrawal screen take a long time (many seconds) to execute, but our JavaScript programming
+language is based on the idea that each statement takes a very short time to execute and then the program promptly goes to the next step.
+For example, in JavaScript, the line where we call runDepositScreen() would execute, then a fraction of a second later it would return,
+and control flow would loop, and the line where we call showMenu() would then execute, showing the menu screen before the user has had even
+a second to interact with the deposit screen.
 </p>
 
 <p>
-That's where Longtime Programming comes in. Longtime programming is an attempt to make pseudocode like the above example
-translate into real code as closely as possible.
+Longtime programming comes in as an attempt to make pseudocode like the above example translate into executable JavaScript code. 
+The appeal of Longtime programming is that the pseudocode of our example is a very natural way to express the program.
+Please understand that I have created a proof of concept, which functions
+correctly however the JavaScript code is more cumbersome than the pseudocode as is expected in this first phase of development.
+The next phase of development would be to create an elegant and concise language resembling the pseudocode that would cross compile
+into JavaScript, or alternatively add a new language feature to JavaScript.
 </p>
 
-<h2>ATM Demo</h2>
+<h2>Demos</h2>
 
 <p>
 Here's an example of an ATM machine programmed with longtime programming:
@@ -80,22 +102,13 @@ Here's an example of an ATM machine programmed with longtime programming:
 <a href="demos/atm-demo.html">ATM Machine Demo</a><br>
 
 <p>
-The source code shows one while loop nested inside another, however the loops are implemented as an 
-array of anonymous function definitions combined with special flags such as Stepper.STARTWHILE.
 A simpler while loop demo is below, where the structure of the loop may be more easily seen:
 </p>
 
 <a href="demos/while-demo.html">While loop demo</a><br>
 
 <p>
-"If" control structures are also implemented in the longtime library, to support cases where it's desired to conditionally
-execute code:
-</p>
-
-<a href="demos/if-demo.html">"If" control structure demo</a><br>
-
-<p>
-Longtime programming has applications for animation, architecture, and services.
+Longtime programming potentially has applications for user interfaces, animation, service oriented architecture, and more.
 </p>
 
 <p>&nbsp;</p>

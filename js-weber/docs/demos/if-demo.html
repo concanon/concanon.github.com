@@ -136,7 +136,7 @@ function startBtnClicked(success)
 			this.system.process1.start(this.nextStepCallback);
 		},
 		Stepper.STARTIF,
-		function(success)
+		function(success) // this function's parameter receives the argument to the previous step function's callback.
 		{
 			this.stepper.IF(success);
 		},

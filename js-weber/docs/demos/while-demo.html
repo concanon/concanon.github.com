@@ -114,28 +114,30 @@ function startBtnClicked()
 	
 	var system = {running: true};
 	
+	// within the anonymous "step" functions below, "this" refers to a special Stepper object
+	// which also contains the properties of the first argument to runSteps.
 	runSteps({system: system},
 	[
 		function()
 		{
 			var callbackSystem = this.system;
-			moveDiv(1, 600, 10, 10, function(){callbackSystem.running = false;});
+			moveDiv(1, 600, 10, 10, function(){callbackSystem.running = false;}); // start moving to the right
 			this.nextStepCallback();
 		},
-		Stepper.STARTWHILE,
+		Stepper.STARTWHILE, // start a while loop
 		function()
 		{
-			this.stepper.WHILE(this.system.running);
+			this.stepper.WHILE(this.system.running); // conditional expression of the while loop
 		},
 			function()
 			{
-				moveDiv(2, 600, 1, 1, this.nextStepCallback);
+				moveDiv(2, 600, 1, 1, this.nextStepCallback); // move to right
 			},
 			function()
 			{
-				moveDiv(2, 0, 1, 1, this.nextStepCallback);
+				moveDiv(2, 0, 1, 1, this.nextStepCallback); // move to left
 			},
-		Stepper.ENDWHILE,
+		Stepper.ENDWHILE, // end the while loop
 		function()
 		{
 			moveDiv(3, 600, 5, 5, this.nextStepCallback);
