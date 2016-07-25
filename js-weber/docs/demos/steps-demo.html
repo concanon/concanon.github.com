@@ -1,0 +1,156 @@
+<html>
+<head>
+
+<script src="../../Utils.js"></script>
+<script src="../../LongTime.js"></script>
+
+<style>
+
+body {
+	text-align: center;
+}
+
+.contentArea {
+	background-color: #eee;
+	color: #222;
+	border-radius: 5px;
+	display: inline-block;
+	width: 40em;
+	padding: 3em;
+	text-align: left;
+}
+
+.div {
+	position: absolute;
+	left: 0;
+	color: white;
+	width: 50px;
+	height: 50px;
+}
+
+#container {
+	position: relative;
+	margin-left: 100px;
+	height: 500px;
+}
+
+#div1 {
+	background-color: red;
+	top: 50px;
+}
+
+#div2 {
+	background-color: yellow;
+	color: black;
+	top: 110px;
+}
+
+#div3 {
+	background-color: green;
+	top: 170px;
+}
+
+#div4 {
+	background-color: blue;
+	top: 230px;
+}
+
+#div5 {
+	background-color: cyan;
+	top: 290px;
+}
+
+#div6 {
+	background-color: #ff3333;
+	top: 350px;
+}
+
+#div7 {
+	background-color: #ff7777;
+	color: black;
+	top: 410px;
+}
+</style>
+
+</head>
+<body onload="bodyOnLoad();">
+<div class="contentArea">
+<a href="../index.html">Back</a>
+<h1>If-Else Conditional Demo</h1>
+<p>
+This demonstrates an if-else conditional. Process 1 attempts to move the red box all the way right. 
+If it's successful, two success steps are taken and two failure steps are skipped. 
+If process 1 is unsuccessful, the two success steps are skipped and the two failure steps are taken.
+Two final steps are taken in any case.
+</p>
+<p>
+View page source to see what the code looks like.
+</p>
+<input id="startBtn" value="Start (success)" type="button" onclick="startBtnClicked(true);"/>
+<input id="startBtnFail" value="Start (failure)" type="button" onclick="startBtnClicked(false);"/>
+</div>
+
+<div id="container">
+<div id="div1" class="div">Process 1</div>
+<div id="div2" class="div">Success Step 1</div>
+<div id="div3" class="div">Success Step 2</div>
+</div>
+
+<script>
+
+
+function bodyOnLoad()
+{
+	var lib = importUtils(); for(var k in lib){window[k] = lib[k];}
+	var lib = importLongTime(); for(var k in lib){window[k] = lib[k];}
+	window.started = false;
+}
+
+
+function moveDiv(divNum, leftPx, animSeconds, nextStepSeconds, onDone)
+{
+	var elt = document.getElementById('div' + divNum);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = animSeconds * 1000 + 'ms';
+	elt.style.left = leftPx + 'px';
+	setTimeout(onDone, nextStepSeconds * 1000);
+}
+
+
+function startBtnClicked(success)
+{
+	if(window.started){return;}
+	window.started = true;
+	
+	runSteps({}, [
+		function(){moveDiv(1, 600, 3, 3, this.nextStepCallback)},
+		function(){moveDiv(2, 600, 2, 2, this.nextStepCallback)},
+		function(){moveDiv(3, 600, 1, 1, this.nextStepCallback)}
+	]);
+	
+}
+
+
+function Process1(success)
+{
+	this.success = success;
+}
+
+
+Process1.prototype.start = function(callback)
+{
+	if(this.success)
+	{
+		moveDiv(1, 600, 3, 3, function(){callback(true);});
+	}
+	else
+	{
+		moveDiv(1, 300, 3, 3, function(){callback(false);});
+	}
+}
+
+
+</script>
+
+</body>
+</html>
