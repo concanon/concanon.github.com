@@ -15,6 +15,7 @@ function addListener(obj, propertyName, callback)
 {
 	if(!obj[propertyName]){obj[propertyName] = makeMultiRunner();}
 	obj[propertyName].fns.push(callback);
+	return callback;
 }
 
 function remListener(obj, propertyName, callback)
@@ -22,9 +23,9 @@ function remListener(obj, propertyName, callback)
 	if(!obj[propertyName]){return;}
 	var fns = obj[propertyName].fns;
 	
-	for(var i=0; i < fns.length; ++i)
+	for(var i=fns.length-1; i >= 0; --i)
 	{
-		if(fns[i] == callback){fns.splice(i, 1);}
+		if(fns[i] === callback){fns.splice(i, 1);}
 	}
 }
 

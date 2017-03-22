@@ -212,9 +212,8 @@ function Watcher() // constructor
 	this.callbacks = new Array();
 	this.callbacksDone = new Array();
 	this.numCallbacksDone = 0;
-	this.doneEvent = function(){}; // public
+	importUtils().addListener(this, 'doneEvent', function(){});
 }
-
 
 Watcher.prototype.makeCallback = function()
 {	
