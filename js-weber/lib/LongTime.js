@@ -35,16 +35,6 @@ Watcher.prototype.start = function(callback) //public
 	{Utils.addListener(this, 'doneEvent', callback);}
 }
 
-Watcher.prototype.onCallback = function(index)
-{
-	this.callbacksDone[index] = true;
-	
-	if(this.started && this.isCallbacksDone())
-	{
-		if(this.doneEvent){this.doneEvent();}
-	}
-}
-
 // returns true if all callbacks have been called
 Watcher.prototype.isCallbacksDone = function() //public
 {
@@ -54,6 +44,16 @@ Watcher.prototype.isCallbacksDone = function() //public
 	}
 	
 	return true;
+}
+
+Watcher.prototype.onCallback = function(index)
+{
+	this.callbacksDone[index] = true;
+	
+	if(this.started && this.isCallbacksDone())
+	{
+		if(this.doneEvent){this.doneEvent();}
+	}
 }
 ////
 

@@ -80,8 +80,8 @@ Allocator.prototype.free = function(obj) //public
 
 ////
 
-if(!s2c){s2c = {};}
-s2c.Utils =
+if(!window.s2c){window.s2c = {};}
+window.s2c.Utils =
 {
 	makeFunctor: makeFunctor,
 	addListener: addListener,

@@ -13,7 +13,7 @@ body {
 	border: 0;
 	font-family: sans-serif;
 	background-color: #000;
-	color: #fff;
+	color: #eee;
 }
 
 #content-box {
@@ -66,39 +66,195 @@ body {
 
 }
 
+/* Watcher Demo */
+
+#watcher-view-area {
+	position: relative;
+	border: 2px solid #ccc;
+	background-color: #333;
+	width: 230px;
+	height: 150px;
+}
+
+#watcher-div1 {
+	position: absolute;
+	left: 0;
+	top: 10px;
+	background-color: red;
+	color: white;
+	width: 30px;
+	height: 30px;
+}
+
+#watcher-div2 {
+	position: absolute;
+	left: 0;
+	top: 50px;
+	background-color: yellow;
+	color: white;
+	width: 30px;
+	height: 30px;
+}
+
+#watcher-div3 {
+	position: absolute;
+	left: 0;
+	top: 90px;
+	background-color: green;
+	color: white;
+	width: 30px;
+	height: 30px;
+}
+
+/* End Watcher Demo */
 
 </style>
 <link rel="stylesheet" href="../../addons/highlight/styles/dark.css">
 <script src="../../addons/highlight/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
+<script src="../../js-weber/lib/Utils.js"></script>
+<script src="../../js-weber/lib/LongTime.js"></script>
 </head>
 <body>
 
 <div id="content-box-wrap">
 <div id="content-box">
 	<div class="left-side my-info">
-		Josef Dochterman<br>
+		<strong>Josef Dochterman</strong><br>
 		Web Developer<br>
-		323 877 9394
+		
 	</div>
 
 	<div class="right-side my-info">
-		PO Box 10536<br>
-		Glendale, CA 91209
+		Cell 323 877 9394
 	</div>
 
 	<div class="both-sides">
+		<h1>Code Samples</h1>
+	</div>
+	
+	<div class="both-sides">
 		<h2>Watcher Demo</h2>
+		
+		<input id="startBtn" value="Start" type="button" onclick="window.watcherDemo.onStartBtn();"/>
+		<br><br>
+		<div id="watcher-view-area">
+			<div id="watcher-div1"></div>
+			<div id="watcher-div2"></div>
+			<div id="watcher-div3"></div>
+		</div>
+		
 		<pre><code>
-function asdf()
+function Watcher() // constructor
 {
-	//comment
-	var x = "";
+	this.callbacks = new Array();
+	this.callbacksDone = new Array();
+	this.started = false;
+}
+// emits doneEvent
+
+Watcher.prototype.makeCallback = function() //public
+{	
+	var callback = Utils.makeFunctor(
+		{watcher: this, index: this.callbacks.length},
+		function(){this.watcher.onCallback(this.index);}
+	);
+
+	this.callbacks.push(callback);
+	this.callbacksDone.push(false);
+	return callback;
+}
+
+Watcher.prototype.start = function(callback) //public
+{
+	this.started = true;
+	
+	if(this.isCallbacksDone())
+	{callback();}
+	else
+	{Utils.addListener(this, 'doneEvent', callback);}
+}
+
+// returns true if all callbacks have been called
+Watcher.prototype.isCallbacksDone = function() //public
+{
+	for(var i=0; i < this.callbacksDone.length; ++i)
+	{
+		if(!this.callbacksDone[i]){return false;}
+	}
+	
+	return true;
+}
+
+Watcher.prototype.onCallback = function(index)
+{
+	this.callbacksDone[index] = true;
+	
+	if(this.started && this.isCallbacksDone())
+	{
+		if(this.doneEvent){this.doneEvent();}
+	}
 }
 		</code></pre>
 	</div>
 </div>
 </div>	
-	
+
+<script>
+
+for(var k in s2c.Utils){window[k] = s2c.Utils[k];}
+for(var k in s2c.LongTime){window[k] = s2c.LongTime[k];}
+
+function WatcherDemo()
+{
+}
+
+WatcherDemo.prototype.moveDiv = function(divNum, leftPx, animSeconds, callback)
+{
+	var elt = document.getElementById('watcher-div' + divNum);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = animSeconds * 1000 + 'ms';
+	elt.style.left = leftPx + 'px';
+	if(callback){setTimeout(callback, animSeconds * 1000);}
+}
+
+WatcherDemo.prototype.step1 = function()
+{
+	var cbThis = this;
+	this.watcher = new Watcher();
+	this.moveDiv(1, 200, 2, this.watcher.makeCallback());
+	this.moveDiv(2, 200, 3, this.watcher.makeCallback());
+	this.watcher.start(function(){cbThis.step2();});
+}
+
+WatcherDemo.prototype.step2 = function()
+{
+	this.moveDiv(3, 200, 3, this.nextStepCallback);
+}
+
+WatcherDemo.prototype.reset = function()
+{
+	for(var i=1; i <= 3; ++i)
+	{
+		var elt = document.getElementById('watcher-div' + i);
+		elt.style.transitionProperty = '';
+		elt.style.transitionDuration = '';
+		elt.style.left = '0px';
+	}
+}
+
+WatcherDemo.prototype.onStartBtn = function()
+{
+	var cbThis = this;
+	this.reset();
+	setTimeout(
+		function(){cbThis.step1();},
+		50
+	);
+}
+
+window.watcherDemo = new WatcherDemo();
+
+</script>
 </body>
 </html>
