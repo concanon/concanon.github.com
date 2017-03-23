@@ -68,20 +68,30 @@ body {
 
 /* Watcher Demo */
 
-#watcher-view-area {
+#watcher-viewArea {
+	display: inline-block;
 	position: relative;
 	border: 2px solid #ccc;
 	background-color: #333;
 	width: 230px;
 	height: 150px;
+	vertical-align: top;
+}
+
+#watcher-consoleArea {
+	display: inline-block;
+	border: 2px solid #aaa;
+	background-color: #000;
+	width: 230px;
+	height: 150px;
+	vertical-align: top;
 }
 
 #watcher-div1 {
 	position: absolute;
 	left: 0;
-	top: 10px;
+	top: 30px;
 	background-color: red;
-	color: white;
 	width: 30px;
 	height: 30px;
 }
@@ -89,9 +99,8 @@ body {
 #watcher-div2 {
 	position: absolute;
 	left: 0;
-	top: 50px;
+	top: 70px;
 	background-color: yellow;
-	color: white;
 	width: 30px;
 	height: 30px;
 }
@@ -99,11 +108,20 @@ body {
 #watcher-div3 {
 	position: absolute;
 	left: 0;
-	top: 90px;
+	top: 110px;
 	background-color: green;
-	color: white;
 	width: 30px;
 	height: 30px;
+}
+
+.processBox {
+	color: #000;
+	font-weight: bold;
+	text-align: center;
+}
+
+#watcher-viewLabel {
+	text-align: right;
 }
 
 /* End Watcher Demo */
@@ -134,45 +152,91 @@ body {
 	</div>
 	
 	<div class="both-sides">
-		<h2>Watcher Demo</h2>
+		<h2>Code Sample #1: Watcher Demo</h2>
+		<p>
+			A Watcher is an object which I invented for callback based programming.
+			Suppose you have three processes, P1, P2, and P3, and you want to begin running
+			P1 and P2, then run P3 only after P1 and P2 have completed. 
+			A Watcher can accomplish this task by "watching" P1 and P2. 
+			When they are complete, the Watcher will begin P3. 
+			In application, P1 and P2 might represent AJAX calls, or sound and animation sequences.
+		</p>
 		
-		<input id="startBtn" value="Start" type="button" onclick="window.watcherDemo.onStartBtn();"/>
+		<p>
+			In this demo, P1 and P2 will take a random amount of time to complete. 
+			When complete, their boxes will reach the far right side of the view area near the word "Done".
+			P3 should begin moving to the right only after P1 and P2 have reached the far right.
+		</p>
+		
+		<input id="watcher-startBtn" value="Start" type="button" onclick="window.watcherDemo.onStartBtn();"/>
 		<br><br>
-		<div id="watcher-view-area">
-			<div id="watcher-div1"></div>
-			<div id="watcher-div2"></div>
-			<div id="watcher-div3"></div>
-		</div>
 		
+		<div id="watcher-viewArea">
+			<div id="watcher-viewLabel">Done</div>
+			<div id="watcher-div1" class="processBox">P1</div>
+			<div id="watcher-div2" class="processBox">P2</div>
+			<div id="watcher-div3" class="processBox">P3</div>
+		</div>
+		<div id="watcher-consoleArea">Console output:<br></div>
+
+		<p>
+			A Watcher is used as follows:
+		</p>
+		<pre><code>
+WatcherDemo.prototype.step1 = function()
+{
+	var cbThis = this;
+	this.running = true;
+	this.watcher = new Watcher();
+	this.startProcess(1, this.watcher.makeCallback());
+	this.startProcess(2, this.watcher.makeCallback());
+	this.watcher.start(function(callbackArgs){cbThis.step2(callbackArgs);});
+}
+		</code></pre>
+
+		<p>
+			Above, a watcher object is created, and used to create two callbacks.
+			When the callbacks are called, their arguments are made available 
+			in the callbackArgs variable which is an array of arguments for each callback.
+			View page source to review the full Watcher demo code.
+		</p>
+		
+		<p>
+			Below is the source code for the Watcher class:
+		</p>
 		<pre><code>
 function Watcher() // constructor
 {
-	this.callbacks = new Array();
-	this.callbacksDone = new Array();
+	this.callbacks = [];
+	this.callbacksDone = [];
+	this.callbackArgs = []; // array of argument arrays which are returned by callbacks
 	this.started = false;
 }
-// emits doneEvent
+// emits doneEvent(callbackArgs) 
+// where callbackArgs is an array of argument arrays corresponding to each watched callback's arguments
 
 Watcher.prototype.makeCallback = function() //public
 {	
 	var callback = Utils.makeFunctor(
 		{watcher: this, index: this.callbacks.length},
-		function(){this.watcher.onCallback(this.index);}
+		function(){this.watcher.onCallback(this.index, arguments);}
 	);
 
 	this.callbacks.push(callback);
 	this.callbacksDone.push(false);
+	this.callbackArgs.push([]);
 	return callback;
 }
 
+/*
+	callback will receive an array of argument arrays corresponding 
+	to each watched callback's arguments
+*/
 Watcher.prototype.start = function(callback) //public
 {
 	this.started = true;
-	
-	if(this.isCallbacksDone())
-	{callback();}
-	else
-	{Utils.addListener(this, 'doneEvent', callback);}
+	Utils.addListener(this, 'doneEvent', callback);
+	this.checkIfDone();
 }
 
 // returns true if all callbacks have been called
@@ -186,15 +250,20 @@ Watcher.prototype.isCallbacksDone = function() //public
 	return true;
 }
 
-Watcher.prototype.onCallback = function(index)
+Watcher.prototype.onCallback = function(index, args)
 {
 	this.callbacksDone[index] = true;
-	
-	if(this.started && this.isCallbacksDone())
-	{
-		if(this.doneEvent){this.doneEvent();}
-	}
+	this.callbackArgs[index] = args;
+	this.checkIfDone();
 }
+
+Watcher.prototype.checkIfDone = function()
+{
+	if(!this.started || !this.isCallbacksDone()){return false;}
+	if(this.doneEvent){this.doneEvent.apply(null, [this.callbackArgs]);}
+	return true;
+}
+
 		</code></pre>
 	</div>
 </div>
@@ -207,33 +276,52 @@ for(var k in s2c.LongTime){window[k] = s2c.LongTime[k];}
 
 function WatcherDemo()
 {
+	this.running = false;
 }
 
-WatcherDemo.prototype.moveDiv = function(divNum, leftPx, animSeconds, callback)
+WatcherDemo.prototype.startProcess = function(processNum, callback)
 {
-	var elt = document.getElementById('watcher-div' + divNum);
+	var elt = document.getElementById('watcher-div' + processNum);
+	var durationMs = 1250 + Math.round(Math.random() * 3000);
 	elt.style.transitionProperty = 'left';
-	elt.style.transitionDuration = animSeconds * 1000 + 'ms';
-	elt.style.left = leftPx + 'px';
-	if(callback){setTimeout(callback, animSeconds * 1000);}
+	elt.style.transitionDuration = durationMs + 'ms';
+	elt.style.left = '200px';
+	if(callback)
+	{
+		setTimeout(function(){callback(processNum, durationMs);}, durationMs);
+	}
 }
 
 WatcherDemo.prototype.step1 = function()
 {
 	var cbThis = this;
+	this.running = true;
 	this.watcher = new Watcher();
-	this.moveDiv(1, 200, 2, this.watcher.makeCallback());
-	this.moveDiv(2, 200, 3, this.watcher.makeCallback());
-	this.watcher.start(function(){cbThis.step2();});
+	this.startProcess(1, this.watcher.makeCallback());
+	this.startProcess(2, this.watcher.makeCallback());
+	this.watcher.start(function(callbackArgs){cbThis.step2(callbackArgs);});
 }
 
-WatcherDemo.prototype.step2 = function()
+WatcherDemo.prototype.step2 = function(callbackArgs)
 {
-	this.moveDiv(3, 200, 3, this.nextStepCallback);
+	var cbThis = this;
+	this.startProcess(3, function(){cbThis.step3(callbackArgs);});
+}
+
+WatcherDemo.prototype.step3 = function(callbackArgs)
+{
+	var conElt = document.getElementById('watcher-consoleArea');
+	conElt.innerHTML += 'P' + callbackArgs[0][0] + ' completed in ' + callbackArgs[0][1] + 'ms<br>';
+	conElt.innerHTML += 'P' + callbackArgs[1][0] + ' completed in ' + callbackArgs[1][1] + 'ms<br>';
+	conElt.innerHTML += 'Done';
+	this.running = false;
+	document.getElementById('watcher-startBtn').disabled = false;
 }
 
 WatcherDemo.prototype.reset = function()
 {
+	document.getElementById('watcher-consoleArea').innerHTML = 'Console output:<br>Started<br>';
+	
 	for(var i=1; i <= 3; ++i)
 	{
 		var elt = document.getElementById('watcher-div' + i);
@@ -245,7 +333,9 @@ WatcherDemo.prototype.reset = function()
 
 WatcherDemo.prototype.onStartBtn = function()
 {
+	if(this.running){return;}
 	var cbThis = this;
+	document.getElementById('watcher-startBtn').disabled = true;
 	this.reset();
 	setTimeout(
 		function(){cbThis.step1();},

@@ -7,32 +7,36 @@ var Utils = s2c.Utils;
 ////
 function Watcher() // constructor
 {
-	this.callbacks = new Array();
-	this.callbacksDone = new Array();
+	this.callbacks = [];
+	this.callbacksDone = [];
+	this.callbackArgs = []; // array of argument arrays which are returned by callbacks
 	this.started = false;
 }
-// emits doneEvent
+// emits doneEvent(callbackArgs) 
+// where callbackArgs is an array of argument arrays corresponding to each watched callback's arguments
 
 Watcher.prototype.makeCallback = function() //public
 {	
 	var callback = Utils.makeFunctor(
 		{watcher: this, index: this.callbacks.length},
-		function(){this.watcher.onCallback(this.index);}
+		function(){this.watcher.onCallback(this.index, arguments);}
 	);
 
 	this.callbacks.push(callback);
 	this.callbacksDone.push(false);
+	this.callbackArgs.push([]);
 	return callback;
 }
 
+/*
+	callback will receive an array of argument arrays corresponding 
+	to each watched callback's arguments
+*/
 Watcher.prototype.start = function(callback) //public
 {
 	this.started = true;
-	
-	if(this.isCallbacksDone())
-	{callback();}
-	else
-	{Utils.addListener(this, 'doneEvent', callback);}
+	Utils.addListener(this, 'doneEvent', callback);
+	this.checkIfDone();
 }
 
 // returns true if all callbacks have been called
@@ -46,15 +50,20 @@ Watcher.prototype.isCallbacksDone = function() //public
 	return true;
 }
 
-Watcher.prototype.onCallback = function(index)
+Watcher.prototype.onCallback = function(index, args)
 {
 	this.callbacksDone[index] = true;
-	
-	if(this.started && this.isCallbacksDone())
-	{
-		if(this.doneEvent){this.doneEvent();}
-	}
+	this.callbackArgs[index] = args;
+	this.checkIfDone();
 }
+
+Watcher.prototype.checkIfDone = function()
+{
+	if(!this.started || !this.isCallbacksDone()){return false;}
+	if(this.doneEvent){this.doneEvent.apply(null, [this.callbackArgs]);}
+	return true;
+}
+
 ////
 
 if(!s2c){s2c = {};}
