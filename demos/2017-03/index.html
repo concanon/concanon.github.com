@@ -11,9 +11,26 @@ body {
 	margin: 8px 8px;
 	padding: 0;
 	border: 0;
+	font-size: 17px;
 	font-family: sans-serif;
 	background-color: #000;
-	color: #eee;
+	color: #ddd;
+}
+
+a {
+	color: #55f;
+}
+
+h1 {
+	font-size: 27px;
+}
+
+h2 {
+	font-size: 23px;
+}
+
+code {
+	font-size: 15px;
 }
 
 #content-box {
@@ -66,6 +83,18 @@ body {
 
 }
 
+/* Game Gallery */
+
+.gameGallery-imageBox {
+	display: inline-block;
+	vertical-align: top;
+	width: 225px;
+	margin-right: 5px;
+	margin-bottom: 15px;
+}
+
+/* End Game Gallery */
+
 /* Watcher Demo */
 
 #watcher-viewArea {
@@ -77,7 +106,6 @@ body {
 	height: 150px;
 	vertical-align: top;
 }
-
 #watcher-consoleArea {
 	display: inline-block;
 	border: 2px solid #aaa;
@@ -86,7 +114,6 @@ body {
 	height: 150px;
 	vertical-align: top;
 }
-
 #watcher-div1 {
 	position: absolute;
 	left: 0;
@@ -95,7 +122,6 @@ body {
 	width: 30px;
 	height: 30px;
 }
-
 #watcher-div2 {
 	position: absolute;
 	left: 0;
@@ -104,7 +130,6 @@ body {
 	width: 30px;
 	height: 30px;
 }
-
 #watcher-div3 {
 	position: absolute;
 	left: 0;
@@ -113,13 +138,11 @@ body {
 	width: 30px;
 	height: 30px;
 }
-
 .processBox {
 	color: #000;
 	font-weight: bold;
 	text-align: center;
 }
-
 #watcher-viewLabel {
 	text-align: right;
 }
@@ -140,6 +163,7 @@ body {
 	<div class="left-side my-info">
 		<strong>Josef Dochterman</strong><br>
 		Web Developer<br>
+		<a href="docs/Josef-Dochterman-Resume.pdf" target="_blank">Resume Here</a>
 		
 	</div>
 
@@ -147,6 +171,40 @@ body {
 		Cell 323 877 9394
 	</div>
 
+	<div class="both-sides">
+		<h1>Educational HTML5 Games for Children</h1>
+		JavaScript, HTML5 & CSS for iPad and desktop Browsers
+		<br><br>
+	</div>
+	
+	<div class="both-sides">
+		<div class="gameGallery-imageBox">
+			<img src="img/portfolio/abc-games/alphabet-cleanup.png"><br>
+			Drag and drop toys / Simulated 3D scene panning
+		</div>
+		<div class="gameGallery-imageBox">
+			<img src="img/portfolio/abc-games/matching-cards.png"><br>
+			Modular and configurable game engine / Matching cards fly into place / Drag and drop
+		</div>
+		<div class="gameGallery-imageBox">
+			<img src="img/portfolio/abc-games/letters-on-the-barn.png"><br>
+			Finger paint letters / animated bee, spider and paint roller
+		</div>
+	</div>
+	
+	<div class="both-sides">
+		<h1>Commercial Website Development</h1>
+		JavaScript, HTML & CSS
+		<br><br>
+	</div>
+	
+	<div class="both-sides">
+		<div class="gameGallery-imageBox">
+			<img src="img/portfolio/tb54-sweepstakes-tn.jpg"><br>
+			Panasonic business to business marketing
+		</div>
+	</div>
+	
 	<div class="both-sides">
 		<h1>Code Samples</h1>
 	</div>
@@ -186,7 +244,6 @@ body {
 WatcherDemo.prototype.step1 = function()
 {
 	var cbThis = this;
-	this.running = true;
 	this.watcher = new Watcher();
 	this.startProcess(1, this.watcher.makeCallback('myP1Key')); // 'myP1Key' is an arbitrary key to identify the callback
 	this.startProcess(2, this.watcher.makeCallback('myP2Key'));
@@ -308,7 +365,7 @@ WatcherDemo.prototype.startProcess = function(processNum, callback)
 	elt.style.transitionProperty = 'left';
 	elt.style.transitionDuration = durationMs + 'ms';
 	elt.style.left = '200px';
-	var result = 'P' + processNum + ' result in ' + durationMs + 'ms';
+	var result = 'P' + processNum + ' result in ' + durationMs + 'ms time';
 	
 	if(callback){
 		setTimeout(function(){callback(result);}, durationMs);
@@ -318,7 +375,6 @@ WatcherDemo.prototype.startProcess = function(processNum, callback)
 WatcherDemo.prototype.step1 = function()
 {
 	var cbThis = this;
-	this.running = true;
 	this.watcher = new Watcher();
 	this.startProcess(1, this.watcher.makeCallback('myP1Key')); // 'myP1Key' is an arbitrary key to identify the callback
 	this.startProcess(2, this.watcher.makeCallback('myP2Key'));
@@ -360,6 +416,7 @@ WatcherDemo.prototype.reset = function()
 WatcherDemo.prototype.onStartBtn = function()
 {
 	if(this.running){return;}
+	this.running = true;
 	var cbThis = this;
 	document.getElementById('watcher-startBtn').disabled = true;
 	this.reset();
