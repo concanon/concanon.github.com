@@ -10,16 +10,20 @@ function Watcher() // constructor
 	this.callbacks = [];
 	this.callbacksDone = [];
 	this.callbackArgs = []; // array of argument arrays which are returned by callbacks
+	this.callbackArgsByKey = {}; // map of callbackKeyStr to callback arguments array
 	this.started = false;
 }
 // emits doneEvent(callbackArgs) 
 // where callbackArgs is an array of argument arrays corresponding to each watched callback's arguments
 
-Watcher.prototype.makeCallback = function() //public
-{	
+//callbackKeyStr is an optional arbitrary string used to identify the newly created callback
+Watcher.prototype.makeCallback = function(callbackKeyStr) //public
+{
+	if(arguments.length < 1){callbackKeyStr = '' + this.callbacks.length;}
+	
 	var callback = Utils.makeFunctor(
-		{watcher: this, index: this.callbacks.length},
-		function(){this.watcher.onCallback(this.index, arguments);}
+		{watcher: this, index: this.callbacks.length, callbackKeyStr: callbackKeyStr},
+		function(){this.watcher.onCallback(this.index, this.callbackKeyStr, arguments);}
 	);
 
 	this.callbacks.push(callback);
@@ -50,10 +54,16 @@ Watcher.prototype.isCallbacksDone = function() //public
 	return true;
 }
 
-Watcher.prototype.onCallback = function(index, args)
+Watcher.prototype.getCallbackArgs = function(callbackKeyStr) // public
+{
+	return this.callbackArgsByKey[callbackKeyStr];
+}
+
+Watcher.prototype.onCallback = function(index, callbackKeyStr, args)
 {
 	this.callbacksDone[index] = true;
 	this.callbackArgs[index] = args;
+	this.callbackArgsByKey[callbackKeyStr] = args;
 	this.checkIfDone();
 }
 

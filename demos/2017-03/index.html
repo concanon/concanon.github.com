@@ -182,44 +182,61 @@ body {
 		<p>
 			A Watcher is used as follows:
 		</p>
-		<pre><code>
+		<pre><code class="javascript">
 WatcherDemo.prototype.step1 = function()
 {
 	var cbThis = this;
 	this.running = true;
 	this.watcher = new Watcher();
-	this.startProcess(1, this.watcher.makeCallback());
-	this.startProcess(2, this.watcher.makeCallback());
-	this.watcher.start(function(callbackArgs){cbThis.step2(callbackArgs);});
+	this.startProcess(1, this.watcher.makeCallback('myP1Key')); // 'myP1Key' is an arbitrary key to identify the callback
+	this.startProcess(2, this.watcher.makeCallback('myP2Key'));
+	this.watcher.start(function(){cbThis.step2();});
+}
+
+WatcherDemo.prototype.step2 = function()
+{
+	var cbThis = this;
+	var conElt = document.getElementById('watcher-consoleArea');
+	conElt.innerHTML += 'Step 2:&lt;br&gt;';
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP1Key')[0] + '&lt;br&gt;'; // log the result of P1
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP2Key')[0] + '&lt;br&gt;'; // log the result of P2
+	conElt.innerHTML += 'Starting P3&lt;br&gt;';
+	this.startProcess(3, function(){cbThis.step3();});
 }
 		</code></pre>
 
 		<p>
 			Above, a watcher object is created, and used to create two callbacks.
-			When the callbacks are called, their arguments are made available 
-			in the callbackArgs variable which is an array of arguments for each callback.
+			Each callback is assigned a key string to identify it later.
+			After the callbacks are called, their arguments are retrieved
+			through the watcher's getCallbackArgs(callbackKeyStr) method which 
+			returns the arguments array.
 			View page source to review the full Watcher demo code.
 		</p>
 		
 		<p>
 			Below is the source code for the Watcher class:
 		</p>
-		<pre><code>
+		<pre><code class="javascript">
 function Watcher() // constructor
 {
 	this.callbacks = [];
 	this.callbacksDone = [];
 	this.callbackArgs = []; // array of argument arrays which are returned by callbacks
+	this.callbackArgsByKey = {}; // map of callbackKeyStr to callback arguments array
 	this.started = false;
 }
 // emits doneEvent(callbackArgs) 
 // where callbackArgs is an array of argument arrays corresponding to each watched callback's arguments
 
-Watcher.prototype.makeCallback = function() //public
-{	
+//callbackKeyStr is an optional arbitrary string used to identify the newly created callback
+Watcher.prototype.makeCallback = function(callbackKeyStr) //public
+{
+	if(arguments.length < 1){callbackKeyStr = '' + this.callbacks.length;}
+	
 	var callback = Utils.makeFunctor(
-		{watcher: this, index: this.callbacks.length},
-		function(){this.watcher.onCallback(this.index, arguments);}
+		{watcher: this, index: this.callbacks.length, callbackKeyStr: callbackKeyStr},
+		function(){this.watcher.onCallback(this.index, this.callbackKeyStr, arguments);}
 	);
 
 	this.callbacks.push(callback);
@@ -250,10 +267,16 @@ Watcher.prototype.isCallbacksDone = function() //public
 	return true;
 }
 
-Watcher.prototype.onCallback = function(index, args)
+Watcher.prototype.getCallbackArgs = function(callbackKeyStr) // public
+{
+	return this.callbackArgsByKey[callbackKeyStr];
+}
+
+Watcher.prototype.onCallback = function(index, callbackKeyStr, args)
 {
 	this.callbacksDone[index] = true;
 	this.callbackArgs[index] = args;
+	this.callbackArgsByKey[callbackKeyStr] = args;
 	this.checkIfDone();
 }
 
@@ -263,7 +286,6 @@ Watcher.prototype.checkIfDone = function()
 	if(this.doneEvent){this.doneEvent.apply(null, [this.callbackArgs]);}
 	return true;
 }
-
 		</code></pre>
 	</div>
 </div>
@@ -286,9 +308,10 @@ WatcherDemo.prototype.startProcess = function(processNum, callback)
 	elt.style.transitionProperty = 'left';
 	elt.style.transitionDuration = durationMs + 'ms';
 	elt.style.left = '200px';
-	if(callback)
-	{
-		setTimeout(function(){callback(processNum, durationMs);}, durationMs);
+	var result = 'P' + processNum + ' result in ' + durationMs + 'ms';
+	
+	if(callback){
+		setTimeout(function(){callback(result);}, durationMs);
 	}
 }
 
@@ -297,22 +320,25 @@ WatcherDemo.prototype.step1 = function()
 	var cbThis = this;
 	this.running = true;
 	this.watcher = new Watcher();
-	this.startProcess(1, this.watcher.makeCallback());
-	this.startProcess(2, this.watcher.makeCallback());
-	this.watcher.start(function(callbackArgs){cbThis.step2(callbackArgs);});
+	this.startProcess(1, this.watcher.makeCallback('myP1Key')); // 'myP1Key' is an arbitrary key to identify the callback
+	this.startProcess(2, this.watcher.makeCallback('myP2Key'));
+	this.watcher.start(function(){cbThis.step2();});
 }
 
-WatcherDemo.prototype.step2 = function(callbackArgs)
+WatcherDemo.prototype.step2 = function()
 {
 	var cbThis = this;
-	this.startProcess(3, function(){cbThis.step3(callbackArgs);});
+	var conElt = document.getElementById('watcher-consoleArea');
+	conElt.innerHTML += 'Step 2:<br>';
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP1Key')[0] + '<br>'; // log the result of P1
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP2Key')[0] + '<br>'; // log the result of P2
+	conElt.innerHTML += 'Starting P3<br>';
+	this.startProcess(3, function(){cbThis.step3();});
 }
 
-WatcherDemo.prototype.step3 = function(callbackArgs)
+WatcherDemo.prototype.step3 = function()
 {
 	var conElt = document.getElementById('watcher-consoleArea');
-	conElt.innerHTML += 'P' + callbackArgs[0][0] + ' completed in ' + callbackArgs[0][1] + 'ms<br>';
-	conElt.innerHTML += 'P' + callbackArgs[1][0] + ' completed in ' + callbackArgs[1][1] + 'ms<br>';
 	conElt.innerHTML += 'Done';
 	this.running = false;
 	document.getElementById('watcher-startBtn').disabled = false;
