@@ -13,12 +13,12 @@ body {
 	border: 0;
 	font-size: 18px;
 	font-family: sans-serif;
-	background-color: #050505;
-	color: #ddd;
+	background-color: #dddddd;
+	color: #222;
 }
 
 a {
-	color: #55f;
+	color: #333;
 }
 
 a.bookmark {
@@ -101,6 +101,10 @@ code {
 	margin-bottom: 15px;
 }
 
+.gameGallery-imageBox img {
+	border: 2px solid #000;
+}
+
 /* End Game Gallery */
 
 /* Watcher Demo */
@@ -108,20 +112,22 @@ code {
 #watcher-viewArea {
 	display: inline-block;
 	position: relative;
-	border: 2px solid #ccc;
+	border: 2px solid #000;
 	background-color: #333;
 	width: 230px;
 	height: 150px;
 	vertical-align: top;
+	color: #ddd;
 }
 #watcher-consoleArea {
 	display: inline-block;
-	border: 2px solid #aaa;
+	border: 2px solid #000;
 	background-color: #000;
 	width: 230px;
 	height: 150px;
 	vertical-align: top;
 	font-size: 15px;
+	color: #ddd;
 }
 #watcher-div1 {
 	position: absolute;
@@ -257,9 +263,9 @@ code {
 	</div>
 	
 	<div class="both-sides">
-		<h2>Watcher Demo</h2>
+		<h2>JS Watcher Demo</h2>
 		<p>
-			A Watcher is an object which I invented for callback based programming.
+			A Watcher is a JavaScript object which I invented for callback based programming.
 			Suppose you have three processes, P1, P2, and P3, and you want to begin running
 			P1 and P2, then run P3 only after P1 and P2 have completed. 
 			A Watcher can accomplish this task by "watching" P1 and P2. 
@@ -392,8 +398,6 @@ Watcher.prototype.checkIfDone = function()
 }
 		</code></pre>
 	</div>
-</div>
-</div>	
 
 <script>
 
@@ -476,5 +480,250 @@ WatcherDemo.prototype.onStartBtn = function()
 window.watcherDemo = new WatcherDemo();
 
 </script>
+	<div class="both-sides">
+		&nbsp;
+	</div>
+	
+	<div class="both-sides">
+		<h2>PHP MVC Unit Testing Code Sample</h2>
+		<p>
+			This code sample is an illustration of a controller that fits within an imaginary mini MVC framework, and a unit test for that controller.
+			<br>&nbsp;<br>
+			<a href="downloads/php-unit-test-demo.zip">The source files may be downloaded here.</a>
+			<br>&nbsp;<br>
+			PHP version 5.6 and PHPUnit 3.7.21 were used. The following command will run the tests:
+			<pre>phpunit --bootstrap ./src/MyController.php ./tests/MyControllerTest</pre>
+		</p>
+		
+		<h3>Class MyController: the subject of the test</h3>
+		<p>
+			The MyController class is a simple controller which displays a "welcome" view to users who are not logged in, 
+			and a "dashboard" to users who are logged in. This controller is intended to be an illustration 
+			for the purpose of demonstrating unit testing, and fits within an imaginary MVC framework. The unit test for this controller is further below.
+			MyController uses Dependency Injection and Factory design patterns to allow unit testing.
+			<br>&nbsp;<br>
+		</p>
+		
+		<strong>MyController.php</strong>
+		<pre><code class="php">
+&lt;?php
+
+require_once 'MySession.php';
+require_once 'UserDAO.php';
+require_once 'ViewFactory.php';
+require_once 'WelcomeView.php';
+require_once 'DashboardView.php';
+
+/**
+	this class illustrates a controller within a mini mvc system.
+*/
+class MyController
+{
+	protected $userDAO; // used to access user data
+	protected $mySession; // used to access data associated with the current logged in session
+	protected $view; // the view which should be rendered after the controller finishes execution
+
+	/**
+		returns the controller's desired view object
+		(for example, so that the view may be rendered by the ioc container that instantiated this controller)
+	*/
+	public function getView()
+	{
+		return $this-&gt;view;
+	}
+	
+	/**
+		call this to inject the UserDAO dependency
+	*/
+	public function setUserDAO($userDAO)
+	{
+		$this-&gt;userDAO = $userDAO;
+	}
+
+	/**
+		call this to inject the MySession dependency
+	*/
+	public function setMySession($mySession)
+	{
+		$this-&gt;mySession = $mySession;
+	}
+	
+	/**
+		call this to inject the ViewFactory dependency
+	*/
+	public function setViewFactory($viewFactory)
+	{
+		$this-&gt;viewFactory = $viewFactory;
+	}
+	
+	/**
+		this is the controller's main logic.
+		a requirement of this mini mvc framework is that main() must set $this-&gt;view to the desired view,
+		and initialize that view with any needed variables.
+		all dependencies must be injected before main() may be called.
+	*/
+	public function main()
+	{
+		// check the session to see if the user is logged in
+		$loggedInUserId = $this-&gt;mySession-&gt;getUserId();
+
+		if($loggedInUserId === null)
+		{	// nobody is logged in, so show the WelcomeView
+			$this-&gt;view = $this-&gt;viewFactory-&gt;getView('WelcomeView');
+			$this-&gt;view-&gt;init();
+		}
+		else
+		{	// a user is logged in, so show the DashboardView
+			$userData = $this-&gt;userDAO-&gt;getUser($loggedInUserId);
+			
+			$this-&gt;view = $this-&gt;viewFactory-&gt;getView('DashboardView');
+			$this-&gt;view-&gt;init(array(
+				'userName' =&gt; $userData-&gt;userName,
+				'userAge' =&gt; $userData-&gt;userAge
+			));
+		}
+	}
+}
+		</code></pre>
+
+		<h3>Class MyControllerTest: The Unit Test for MyController</h3>
+		<p>
+			The following unit test for PHPUnit will test MyController for the case of no user logged in, and then for the cases of two different users logged in.
+		</p>
+		
+		<strong>MyControllerTest.php</strong>
+		<pre><code class="php">
+&lt;?php
+
+/**
+	unit tests for MyController.
+	this class illustrates how unit testing may be done 
+	in an mvc framework using dependency injection and factory design patterns
+*/
+class MyControllerTest extends PHPUnit_Framework_TestCase
+{
+	private $myController;
+
+	/**
+		perform any operations needed to prepare for a test
+	*/
+	protected function setUp()
+	{
+		$this-&gt;myController = new MyController();		
+	}
+
+	/**
+		provides an array of data for each test to run with testMain
+	*/
+	public function testMainProvider()
+	{
+		// userId, userName, userAge
+		return array(
+			array(null, null, null), // test with nobody logged in
+			array(1111, 'Mr. Smith', 31), // test with a user logged in
+			array(1112, 'Ms. Jones', 27), // test with a different user logged in
+		);
+	}
+ 
+	/**
+		test the main() method of the controller
+		@dataProvider testMainProvider
+	*/
+	public function testMain($userId, $userName, $userAge)
+	{
+		//// mock MySession
+		$mySessionMock = $this-&gt;getMockBuilder('MySession')
+			-&gt;disableOriginalConstructor()
+			-&gt;getMock();
+		
+		// the MySession object will provide the userId for a logged in user,
+		// or null if nobody is logged in
+		$mySessionMock-&gt;expects($this-&gt;once())
+			-&gt;method('getUserId')
+			-&gt;will($this-&gt;returnValue($userId));
+		
+		//// mock UserDAO
+		// the data object to pass to the controller
+		$userData = (object) array(
+			'userName' =&gt; $userName,
+			'userAge' =&gt; $userAge
+		);
+		
+		$userDAOMock = $this-&gt;getMockBuilder('UserDAO')
+			-&gt;disableOriginalConstructor()
+			-&gt;getMock();
+		
+		if($userId === null)
+		{
+			$userDAOMock-&gt;expects($this-&gt;exactly(0))
+				-&gt;method('getUser');
+		}
+		else
+		{
+			$userDAOMock-&gt;expects($this-&gt;once())
+				-&gt;method('getUser')
+				-&gt;will($this-&gt;returnValue($userData));
+		}
+		
+		//// mock ViewFactory
+		$viewFactoryMock = $this-&gt;getMockBuilder('ViewFactory')
+			-&gt;disableOriginalConstructor()
+			-&gt;getMock();
+		
+		// the ViewFactory expects a different view to be requested 
+		// by the controller depending on the value of userId
+		if($userId === null)
+		{	// userId is null, so we expect a WelcomeView to be requested by the controller
+			$expectedViewClassName = 'WelcomeView';
+			$expectedViewMock = $this-&gt;getMockBuilder('WelcomeView')
+				-&gt;disableOriginalConstructor()
+				-&gt;getMock();
+			
+			$expectedViewMock-&gt;expects($this-&gt;once())
+				-&gt;method('init');
+		}
+		else
+		{	// userId is not null, so we expect a DashboardView to be requested by the conroller
+			$expectedViewClassName = 'DashboardView';
+			$expectedViewMock = $this-&gt;getMockBuilder('DashboardView')
+				-&gt;disableOriginalConstructor()
+				-&gt;getMock();
+			
+			// check the view was passed the correct user information
+			$expectedViewMock-&gt;expects($this-&gt;once())
+				-&gt;method('init')
+				-&gt;with($this-&gt;callback(
+					function($subject) use ($userName, $userAge) {
+						return $subject['userName'] === $userName 
+							&amp;&amp; $subject['userAge'] === $userAge;
+					}
+				));
+		}
+		
+		$viewFactoryMock-&gt;expects($this-&gt;once())
+			-&gt;method('getView')
+			-&gt;with($this-&gt;equalTo($expectedViewClassName))
+			-&gt;will($this-&gt;returnValue($expectedViewMock));
+		
+		//// Dependency Inject
+		$this-&gt;myController-&gt;setMySession($mySessionMock);
+		$this-&gt;myController-&gt;setUserDAO($userDAOMock);
+		$this-&gt;myController-&gt;setViewFactory($viewFactoryMock);
+		
+		//// Run Functionality
+		$this-&gt;myController-&gt;main();
+
+		//// Assertions
+		// check the controller responds with the correct view
+		$this-&gt;assertEquals($expectedViewMock, $this-&gt;myController-&gt;getView());
+    }
+ 
+}
+		</code></pre>
+	</div>
+	
+</div>
+</div>
+
 </body>
 </html>
