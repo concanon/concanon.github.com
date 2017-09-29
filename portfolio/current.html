@@ -1,0 +1,758 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Josef Dochterman Portfolio</title>
+<meta name="description" content="Josef Dochterman Portfolio">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style type="text/css">
+body {
+	margin: 8px 8px;
+	padding: 0;
+	border: 0;
+	font-size: 18px;
+	font-family: sans-serif;
+	background-color: #dddddd;
+	color: #222;
+}
+
+a {
+	color: #333;
+}
+
+a.bookmark {
+	color: inherit;
+}
+
+h1 {
+	font-size: 27px;
+}
+
+h2 {
+	font-size: 23px;
+}
+
+code {
+	font-size: 15px;
+}
+
+#docTitle {
+	font-size: 32px;
+	font-weight: bold;
+}
+
+#content-box {
+	/*border: 1px solid green;*/
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.left-side {
+	display: inline-block;
+	/*border: 1px solid red;*/
+	width: 49.2%;
+	margin: 0;
+	padding: 0;
+	min-width: 250px;
+	vertical-align: top;
+}
+.right-side {
+	display: inline-block;
+	/*border: 1px solid blue;*/
+	width: 49.2%;
+	margin: 0;
+	padding: 0;
+	min-width: 250px;
+	vertical-align: top;
+}
+.my-info {
+	font-size: 20px;
+}
+.both-sides {
+	clear: both;
+}
+.content-box-wrap2 {
+	/*border: 1px solid orange;*/
+	width: 98%;
+}
+
+.webItemArea {
+	display: inline-block;
+	max-width: 350px;
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.webItemArea, .webItemArea * {
+	vertical-align: top;
+}
+
+.webItemArea .caption {
+	margin-top: 1ex;
+}
+
+@media screen and (max-width: 991px) {
+     /* start of large tablet styles */
+
+}
+
+@media screen and (max-width: 767px) {
+     /* start of medium tablet styles */
+
+}
+
+@media screen and (max-width: 479px) {
+     /* start of phone styles */
+}
+
+/* Game Gallery */
+
+.gameGallery-imageBox {
+	display: inline-block;
+	vertical-align: top;
+	width: 225px;
+	margin-right: 5px;
+	margin-bottom: 15px;
+}
+
+.gameGallery-imageBox img {
+	border: 2px solid #000;
+}
+
+/* End Game Gallery */
+
+/* Watcher Demo */
+
+#watcher-viewArea {
+	display: inline-block;
+	position: relative;
+	border: 2px solid #000;
+	background-color: #333;
+	width: 230px;
+	height: 150px;
+	vertical-align: top;
+	color: #ddd;
+}
+#watcher-consoleArea {
+	display: inline-block;
+	border: 2px solid #000;
+	background-color: #000;
+	width: 230px;
+	height: 150px;
+	vertical-align: top;
+	font-size: 15px;
+	color: #ddd;
+}
+#watcher-div1 {
+	position: absolute;
+	left: 0;
+	top: 30px;
+	background-color: red;
+	width: 30px;
+	height: 30px;
+}
+#watcher-div2 {
+	position: absolute;
+	left: 0;
+	top: 70px;
+	background-color: yellow;
+	width: 30px;
+	height: 30px;
+}
+#watcher-div3 {
+	position: absolute;
+	left: 0;
+	top: 110px;
+	background-color: green;
+	width: 30px;
+	height: 30px;
+}
+.processBox {
+	color: #000;
+	font-weight: bold;
+	text-align: center;
+}
+#watcher-viewLabel {
+	text-align: right;
+}
+
+/* End Watcher Demo */
+
+</style>
+<link rel="stylesheet" href="../../addons/highlight/styles/dark.css">
+<script src="../../addons/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="../../js-weber/lib/Utils.js"></script>
+<script src="../../js-weber/lib/LongTime.js"></script>
+</head>
+<body>
+
+<div id="content-box-wrap">
+<div id="content-box">
+	<div class="left-side my-info">
+		<strong>Josef Dochterman</strong><br>
+		Web Developer<br>
+		<a href="/docs/Josef-Dochterman-Resume.pdf" target="_blank">Resume Here</a>
+		
+	</div>
+
+	<div class="right-side my-info">
+		<a href="mailto:spirit2change@gmail.com">spirit2change@gmail.com</a><br>
+		Cell 323 877 9394
+	</div>
+
+	<h1 id="docTitle">Portfolio</h1>
+	
+	<div class="both-sides">
+		<h1>HTML5 Applications</h1>
+		<p>
+			Demonstrations of HTML5 apps I have made are available in person&mdash;please
+			schedule a meeting with me to review them.
+		</p>
+
+		<p>
+			HTML5 app features include:
+		</p>
+		
+		<p>
+			<ul>
+				<li>Image viewer and editor with touch screen zoom and pan.</li>
+				<li>Animated, interactive sprites with physics motion.</li>
+				<li>Drag and drop items.</li>
+				<li>Music, speech and sound effects.</li>
+				<li>Educational games for mobile devices.</li>
+			</ul>
+		</p>
+	</div>
+	
+	<div class="both-sides">
+		<h1>Educational HTML5 Games for Children</h1>
+		Below are educational children's games I programmed with JavaScript, HTML5 & CSS.
+		They run on iPad and desktop browsers.
+		<br><br>
+	</div>
+	
+	<div class="both-sides">
+		<div class="gameGallery-imageBox">
+			<img src="/portfolio/images/abc-games/alphabet-cleanup.png"><br>
+			Features:<br>
+			<ul>
+				<li>Drag and drop toys</li>
+				<li>Simulated 3D scene panning</li>
+			</ul>
+		</div>
+		<div class="gameGallery-imageBox">
+			<img src="/portfolio/images/abc-games/matching-cards.png"><br>
+			Features:
+			<ul>
+				<li>Modular and configurable game engine</li>
+				<li>Matching cards fly into place</li>
+			</ul>
+		</div>
+		<div class="gameGallery-imageBox">
+			<img src="/portfolio/images/abc-games/letters-on-the-barn.png"><br>
+			Features:
+			<ul>
+				<li>Finger paint letters</li>
+				<li>Animated bee, spider and paint brush</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="both-sides">
+		<h1>Commercial Website Development</h1>
+		JavaScript, HTML & CSS
+		<br><br>
+	</div>
+
+	<div class="webItemArea">
+		<div class="webGallery-imageBox">
+			<a href="/portfolio/images/visalus/klarity-page-desktop.jpg" target="_blank"><img src="/portfolio/images/visalus/klarity-desktop-tn.jpg"></a><br>
+			<div class="caption">Desktop View<br>ViSalus Sciences Product Marketing</div>
+		</div>
+	</div>
+	
+	<div class="webItemArea">
+		<div class="webGallery-imageBox">
+			<a href="/portfolio/images/visalus/klarity-page-mobile.jpg" target="_blank"><img src="/portfolio/images/visalus/klarity-mobile-tn.jpg"></a><br>
+			<div class="caption">Mobile View<br>ViSalus Sciences Product Marketing</div>
+		</div>
+	</div>
+	
+	<div class="webItemArea">
+		<div class="webGallery-imageBox">
+			<img src="/portfolio/images/tb54-sweepstakes-tn.jpg"><br>
+			<div class="caption">Panasonic Business to business marketing</div>
+		</div>
+	</div>
+	
+	<div class="both-sides">
+		<h1><a class="bookmark" name="code-samples">Code Samples</a></h1>
+	</div>
+	
+	<div class="both-sides">
+		<h2>JS Watcher Demo</h2>
+		<p>
+			A Watcher is a JavaScript object which I invented for callback based programming.
+			Suppose you have three processes, P1, P2, and P3, and you want to begin running
+			P1 and P2, then run P3 only after P1 and P2 have completed. 
+			A Watcher can accomplish this task by "watching" P1 and P2. 
+			When they are complete, the Watcher will begin P3. 
+			In application, P1 and P2 might represent AJAX calls, or sound and animation sequences.
+		</p>
+		
+		<p>
+			In this demo, P1 and P2 will take a random amount of time to complete. 
+			When complete, their boxes will reach the far right side of the view area near the word "Done".
+			P3 should begin moving to the right only after P1 and P2 have reached the far right.
+		</p>
+		
+		<input id="watcher-startBtn" value="Start" type="button" onclick="window.watcherDemo.onStartBtn();"/>
+		<br><br>
+		
+		<div id="watcher-viewArea">
+			<div id="watcher-viewLabel">Done</div>
+			<div id="watcher-div1" class="processBox">P1</div>
+			<div id="watcher-div2" class="processBox">P2</div>
+			<div id="watcher-div3" class="processBox">P3</div>
+		</div>
+		<div id="watcher-consoleArea">Console output:<br></div>
+
+		<p>
+			A Watcher is used as follows:
+		</p>
+		<pre><code class="javascript">
+WatcherDemo.prototype.step1 = function()
+{
+	var cbThis = this;
+	this.watcher = new Watcher();
+	this.startProcess(1, this.watcher.makeCallback('myP1Key')); // 'myP1Key' is an arbitrary key to identify the callback
+	this.startProcess(2, this.watcher.makeCallback('myP2Key'));
+	this.watcher.start(function(){cbThis.step2();});
+}
+
+WatcherDemo.prototype.step2 = function()
+{
+	var cbThis = this;
+	var conElt = document.getElementById('watcher-consoleArea');
+	conElt.innerHTML += 'Step 2:&lt;br&gt;';
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP1Key')[0] + '&lt;br&gt;'; // log the result of P1
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP2Key')[0] + '&lt;br&gt;'; // log the result of P2
+	conElt.innerHTML += 'Starting P3&lt;br&gt;';
+	this.startProcess(3, function(){cbThis.step3();});
+}
+		</code></pre>
+
+		<p>
+			Above, a watcher object is created, and used to create two callbacks.
+			Each callback is assigned a key string to identify it later.
+			After the callbacks are called, their arguments are retrieved
+			through the watcher's getCallbackArgs(callbackKeyStr) method which 
+			returns the arguments array.
+			View page source to review the full Watcher demo code.
+		</p>
+		
+		<p>
+			Below is the source code for the Watcher class:
+		</p>
+		<pre><code class="javascript">
+function Watcher() // constructor
+{
+	this.callbacks = [];
+	this.callbacksDone = [];
+	this.callbackArgs = []; // array of argument arrays which are returned by callbacks
+	this.callbackArgsByKey = {}; // map of callbackKeyStr to callback arguments array
+	this.started = false;
+}
+// emits doneEvent(callbackArgs) 
+// where callbackArgs is an array of argument arrays corresponding to each watched callback's arguments
+
+//callbackKeyStr is an optional arbitrary string used to identify the newly created callback
+Watcher.prototype.makeCallback = function(callbackKeyStr) //public
+{
+	if(arguments.length < 1){callbackKeyStr = '' + this.callbacks.length;}
+	
+	var callback = Utils.makeFunctor(
+		{watcher: this, index: this.callbacks.length, callbackKeyStr: callbackKeyStr},
+		function(){this.watcher.onCallback(this.index, this.callbackKeyStr, arguments);}
+	);
+
+	this.callbacks.push(callback);
+	this.callbacksDone.push(false);
+	this.callbackArgs.push([]);
+	return callback;
+}
+
+/*
+	callback will receive an array of argument arrays corresponding 
+	to each watched callback's arguments
+*/
+Watcher.prototype.start = function(callback) //public
+{
+	this.started = true;
+	Utils.addListener(this, 'doneEvent', callback);
+	this.checkIfDone();
+}
+
+// returns true if all callbacks have been called
+Watcher.prototype.isCallbacksDone = function() //public
+{
+	for(var i=0; i < this.callbacksDone.length; ++i)
+	{
+		if(!this.callbacksDone[i]){return false;}
+	}
+	
+	return true;
+}
+
+Watcher.prototype.getCallbackArgs = function(callbackKeyStr) // public
+{
+	return this.callbackArgsByKey[callbackKeyStr];
+}
+
+Watcher.prototype.onCallback = function(index, callbackKeyStr, args)
+{
+	this.callbacksDone[index] = true;
+	this.callbackArgs[index] = args;
+	this.callbackArgsByKey[callbackKeyStr] = args;
+	this.checkIfDone();
+}
+
+Watcher.prototype.checkIfDone = function()
+{
+	if(!this.started || !this.isCallbacksDone()){return false;}
+	if(this.doneEvent){this.doneEvent.apply(null, [this.callbackArgs]);}
+	return true;
+}
+		</code></pre>
+	</div>
+
+<script>
+
+for(var k in s2c.Utils){window[k] = s2c.Utils[k];}
+for(var k in s2c.LongTime){window[k] = s2c.LongTime[k];}
+
+function WatcherDemo()
+{
+	this.running = false;
+}
+
+WatcherDemo.prototype.startProcess = function(processNum, callback)
+{
+	var elt = document.getElementById('watcher-div' + processNum);
+	var durationMs = 1250 + Math.round(Math.random() * 3000);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = durationMs + 'ms';
+	elt.style.left = '200px';
+	var result = 'P' + processNum + ' result in ' + durationMs + 'ms time';
+	
+	if(callback){
+		setTimeout(function(){callback(result);}, durationMs);
+	}
+}
+
+WatcherDemo.prototype.step1 = function()
+{
+	var cbThis = this;
+	this.watcher = new Watcher();
+	this.startProcess(1, this.watcher.makeCallback('myP1Key')); // 'myP1Key' is an arbitrary key to identify the callback
+	this.startProcess(2, this.watcher.makeCallback('myP2Key'));
+	this.watcher.start(function(){cbThis.step2();});
+}
+
+WatcherDemo.prototype.step2 = function()
+{
+	var cbThis = this;
+	var conElt = document.getElementById('watcher-consoleArea');
+	conElt.innerHTML += 'Step 2:<br>';
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP1Key')[0] + '<br>'; // log the result of P1
+	conElt.innerHTML += this.watcher.getCallbackArgs('myP2Key')[0] + '<br>'; // log the result of P2
+	conElt.innerHTML += 'Starting P3<br>';
+	this.startProcess(3, function(){cbThis.step3();});
+}
+
+WatcherDemo.prototype.step3 = function()
+{
+	var conElt = document.getElementById('watcher-consoleArea');
+	conElt.innerHTML += 'Done';
+	this.running = false;
+	document.getElementById('watcher-startBtn').disabled = false;
+}
+
+WatcherDemo.prototype.reset = function()
+{
+	document.getElementById('watcher-consoleArea').innerHTML = 'Console output:<br>Started<br>';
+	
+	for(var i=1; i <= 3; ++i)
+	{
+		var elt = document.getElementById('watcher-div' + i);
+		elt.style.transitionProperty = '';
+		elt.style.transitionDuration = '';
+		elt.style.left = '0px';
+	}
+}
+
+WatcherDemo.prototype.onStartBtn = function()
+{
+	if(this.running){return;}
+	this.running = true;
+	var cbThis = this;
+	document.getElementById('watcher-startBtn').disabled = true;
+	this.reset();
+	setTimeout(
+		function(){cbThis.step1();},
+		50
+	);
+}
+
+window.watcherDemo = new WatcherDemo();
+
+</script>
+	<div class="both-sides">
+		&nbsp;
+	</div>
+	
+	<div class="both-sides">
+		<h2>PHP MVC Unit Testing Code Sample</h2>
+		<p>
+			This code sample is an illustration of a controller that fits within an imaginary mini MVC framework, and a unit test for that controller.
+			<br>&nbsp;<br>
+			<a href="downloads/php-unit-test-demo.zip">The source files may be downloaded here.</a>
+			<br>&nbsp;<br>
+			PHP version 5.6 and PHPUnit 3.7.21 were used. The following command will run the tests:
+			<pre>phpunit --bootstrap ./src/MyController.php ./tests/MyControllerTest</pre>
+		</p>
+		
+		<h3>Class MyController: the subject of the test</h3>
+		<p>
+			The MyController class is a simple controller which displays a "welcome" view to users who are not logged in, 
+			and a "dashboard" to users who are logged in. This controller is intended to be an illustration 
+			for the purpose of demonstrating unit testing, and fits within an imaginary MVC framework. The unit test for this controller is further below.
+			MyController uses Dependency Injection and Factory design patterns to allow unit testing.
+			<br>&nbsp;<br>
+		</p>
+		
+		<strong>MyController.php</strong>
+		<pre><code class="php">
+&lt;?php
+
+require_once 'MySession.php';
+require_once 'UserDAO.php';
+require_once 'ViewFactory.php';
+require_once 'WelcomeView.php';
+require_once 'DashboardView.php';
+
+/**
+	this class illustrates a controller within a mini mvc system.
+*/
+class MyController
+{
+	protected $userDAO; // used to access user data
+	protected $mySession; // used to access data associated with the current logged in session
+	protected $view; // the view which should be rendered after the controller finishes execution
+
+	/**
+		returns the controller's desired view object
+		(for example, so that the view may be rendered by the ioc container that instantiated this controller)
+	*/
+	public function getView()
+	{
+		return $this-&gt;view;
+	}
+	
+	/**
+		call this to inject the UserDAO dependency
+	*/
+	public function setUserDAO($userDAO)
+	{
+		$this-&gt;userDAO = $userDAO;
+	}
+
+	/**
+		call this to inject the MySession dependency
+	*/
+	public function setMySession($mySession)
+	{
+		$this-&gt;mySession = $mySession;
+	}
+	
+	/**
+		call this to inject the ViewFactory dependency
+	*/
+	public function setViewFactory($viewFactory)
+	{
+		$this-&gt;viewFactory = $viewFactory;
+	}
+	
+	/**
+		this is the controller's main logic.
+		a requirement of this mini mvc framework is that main() must set $this-&gt;view to the desired view,
+		and initialize that view with any needed variables.
+		all dependencies must be injected before main() may be called.
+	*/
+	public function main()
+	{
+		// check the session to see if the user is logged in
+		$loggedInUserId = $this-&gt;mySession-&gt;getUserId();
+
+		if($loggedInUserId === null)
+		{	// nobody is logged in, so show the WelcomeView
+			$this-&gt;view = $this-&gt;viewFactory-&gt;getView('WelcomeView');
+			$this-&gt;view-&gt;init();
+		}
+		else
+		{	// a user is logged in, so show the DashboardView
+			$userData = $this-&gt;userDAO-&gt;getUser($loggedInUserId);
+			
+			$this-&gt;view = $this-&gt;viewFactory-&gt;getView('DashboardView');
+			$this-&gt;view-&gt;init(array(
+				'userName' =&gt; $userData-&gt;userName,
+				'userAge' =&gt; $userData-&gt;userAge
+			));
+		}
+	}
+}
+		</code></pre>
+
+		<h3>Class MyControllerTest: The Unit Test for MyController</h3>
+		<p>
+			The following unit test for PHPUnit will test MyController for the case of no user logged in, and then for the cases of two different users logged in.
+		</p>
+		
+		<strong>MyControllerTest.php</strong>
+		<pre><code class="php">
+&lt;?php
+
+/**
+	unit tests for MyController.
+	this class illustrates how unit testing may be done 
+	in an mvc framework using dependency injection and factory design patterns
+*/
+class MyControllerTest extends PHPUnit_Framework_TestCase
+{
+	private $myController;
+
+	/**
+		perform any operations needed to prepare for a test
+	*/
+	protected function setUp()
+	{
+		$this-&gt;myController = new MyController();		
+	}
+
+	/**
+		provides an array of data for each test to run with testMain
+	*/
+	public function testMainProvider()
+	{
+		// userId, userName, userAge
+		return array(
+			array(null, null, null), // test with nobody logged in
+			array(1111, 'Mr. Smith', 31), // test with a user logged in
+			array(1112, 'Ms. Jones', 27), // test with a different user logged in
+		);
+	}
+ 
+	/**
+		test the main() method of the controller
+		@dataProvider testMainProvider
+	*/
+	public function testMain($userId, $userName, $userAge)
+	{
+		//// mock MySession
+		$mySessionMock = $this-&gt;getMockBuilder('MySession')
+			-&gt;disableOriginalConstructor()
+			-&gt;getMock();
+		
+		// the MySession object will provide the userId for a logged in user,
+		// or null if nobody is logged in
+		$mySessionMock-&gt;expects($this-&gt;once())
+			-&gt;method('getUserId')
+			-&gt;will($this-&gt;returnValue($userId));
+		
+		//// mock UserDAO
+		// the data object to pass to the controller
+		$userData = (object) array(
+			'userName' =&gt; $userName,
+			'userAge' =&gt; $userAge
+		);
+		
+		$userDAOMock = $this-&gt;getMockBuilder('UserDAO')
+			-&gt;disableOriginalConstructor()
+			-&gt;getMock();
+		
+		if($userId === null)
+		{
+			$userDAOMock-&gt;expects($this-&gt;exactly(0))
+				-&gt;method('getUser');
+		}
+		else
+		{
+			$userDAOMock-&gt;expects($this-&gt;once())
+				-&gt;method('getUser')
+				-&gt;will($this-&gt;returnValue($userData));
+		}
+		
+		//// mock ViewFactory
+		$viewFactoryMock = $this-&gt;getMockBuilder('ViewFactory')
+			-&gt;disableOriginalConstructor()
+			-&gt;getMock();
+		
+		// the ViewFactory expects a different view to be requested 
+		// by the controller depending on the value of userId
+		if($userId === null)
+		{	// userId is null, so we expect a WelcomeView to be requested by the controller
+			$expectedViewClassName = 'WelcomeView';
+			$expectedViewMock = $this-&gt;getMockBuilder('WelcomeView')
+				-&gt;disableOriginalConstructor()
+				-&gt;getMock();
+			
+			$expectedViewMock-&gt;expects($this-&gt;once())
+				-&gt;method('init');
+		}
+		else
+		{	// userId is not null, so we expect a DashboardView to be requested by the conroller
+			$expectedViewClassName = 'DashboardView';
+			$expectedViewMock = $this-&gt;getMockBuilder('DashboardView')
+				-&gt;disableOriginalConstructor()
+				-&gt;getMock();
+			
+			// check the view was passed the correct user information
+			$expectedViewMock-&gt;expects($this-&gt;once())
+				-&gt;method('init')
+				-&gt;with($this-&gt;callback(
+					function($subject) use ($userName, $userAge) {
+						return $subject['userName'] === $userName 
+							&amp;&amp; $subject['userAge'] === $userAge;
+					}
+				));
+		}
+		
+		$viewFactoryMock-&gt;expects($this-&gt;once())
+			-&gt;method('getView')
+			-&gt;with($this-&gt;equalTo($expectedViewClassName))
+			-&gt;will($this-&gt;returnValue($expectedViewMock));
+		
+		//// Dependency Inject
+		$this-&gt;myController-&gt;setMySession($mySessionMock);
+		$this-&gt;myController-&gt;setUserDAO($userDAOMock);
+		$this-&gt;myController-&gt;setViewFactory($viewFactoryMock);
+		
+		//// Run Functionality
+		$this-&gt;myController-&gt;main();
+
+		//// Assertions
+		// check the controller responds with the correct view
+		$this-&gt;assertEquals($expectedViewMock, $this-&gt;myController-&gt;getView());
+    }
+ 
+}
+		</code></pre>
+	</div>
+	
+</div>
+</div>
+
+</body>
+</html>
