@@ -185,7 +185,7 @@ code {
 <link rel="stylesheet" href="../../addons/highlight/styles/dark.css">
 <script src="../../addons/highlight/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-<script src="../../js-weber/lib/Utils.js"></script>
+<script src="js/lib_S2C_Utils.js"></script>
 <script src="../../js-weber/lib/LongTime.js"></script>
 <script src="js/lib_S2C_FunctorDemo.js"></script>
 </head>
@@ -572,8 +572,7 @@ Watcher.prototype.checkIfDone = function()
 	</div>
 
 <script>
-
-for(var k in s2c.Utils){window[k] = s2c.Utils[k];}
+for(var k in getLib_S2C_Utils()){window[k] = getLib_S2C_Utils()[k];}
 for(var k in s2c.LongTime){window[k] = s2c.LongTime[k];}
 
 function WatcherDemo()
