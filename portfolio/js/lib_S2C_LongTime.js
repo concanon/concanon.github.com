@@ -3,7 +3,7 @@ function getLib_S2C_LongTime()
 {
 	if(window.lib_S2C_LongTime){return window.lib_S2C_LongTime;}
 
-	var Utils = getLib_S2C_Utils;
+	var Utils = getLib_S2C_Utils();
 
 	///
 	
