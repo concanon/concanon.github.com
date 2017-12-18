@@ -500,74 +500,87 @@ WatcherDemo.prototype.step3 = function()
 			Below is the source code for the Watcher class:
 		</p>
 		<pre><code class="javascript">
-function Watcher() // constructor
-{
-	this.callbacks = [];
-	this.callbacksDone = [];
-	this.callbackArgs = []; // array of argument arrays which are returned by callbacks
-	this.callbackArgsByKey = {}; // map of callbackKeyStr to callback arguments array
-	this.started = false;
-}
-// emits doneEvent(callbackArgs) 
-// where callbackArgs is an array of argument arrays corresponding to each watched callback's arguments
 
-//callbackKeyStr is an optional arbitrary string used to identify the newly created callback
-Watcher.prototype.makeCallback = function(callbackKeyStr) //public
+/*
+	events: calls event doneEvent(callbackArgs), where callbackArgs 
+		is an array of argument arrays corresponding to each watched callback's arguments.
+*/
+function Watcher()
 {
-	if(arguments.length < 1){callbackKeyStr = '' + this.callbacks.length;}
+	this._callbacks = [];
+	this._callbacksDone = [];
+	this._callbackArgs = []; // array of argument arrays which are returned by callbacks
+	this._callbackArgsByKey = {}; // map of callbackKeyStr to callback arguments array
+	this._started = false;
+}
+
+/*
+	Create a watched callback. 
+	callbackKeyStr - an optional arbitrary string used to identify the newly created callback.
+*/
+Watcher.prototype.makeCallback = function(callbackKeyStr)
+{
+	if(arguments.length &lt; 1){callbackKeyStr = '' + this._callbacks.length;}
 	
 	var callback = Utils.makeFunctor(
-		{watcher: this, index: this.callbacks.length, callbackKeyStr: callbackKeyStr},
-		function(){this.watcher.onCallback(this.index, this.callbackKeyStr, arguments);}
+		{watcher: this, index: this._callbacks.length, callbackKeyStr: callbackKeyStr},
+		function(){this.watcher._onCallback(this.index, this.callbackKeyStr, arguments);}
 	);
 
-	this.callbacks.push(callback);
-	this.callbacksDone.push(false);
-	this.callbackArgs.push([]);
+	this._callbacks.push(callback);
+	this._callbacksDone.push(false);
+	this._callbackArgs.push([]);
 	return callback;
 }
 
 /*
-	callback will receive an array of argument arrays corresponding 
-	to each watched callback's arguments
+	Begin waiting for all watched callbacks to be called.
+	callback will receive an array of argument arrays corresponding to each watched callback's arguments.
 */
-Watcher.prototype.start = function(callback) //public
+Watcher.prototype.start = function(callback)
 {
-	this.started = true;
+	this._started = true;
 	Utils.addListener(this, 'doneEvent', callback);
-	this.checkIfDone();
+	this._checkIfDone();
 }
 
-// returns true if all callbacks have been called
-Watcher.prototype.isCallbacksDone = function() //public
+/*
+	After all watched callbacks are complete, this method will retrieve the arguments for a watched callback.
+	callbackKeyStr - the key string of the watched callback for which to retrieve arguments.
+*/
+Watcher.prototype.getCallbackArgs = function(callbackKeyStr)
 {
-	for(var i=0; i < this.callbacksDone.length; ++i)
+	return this._callbackArgsByKey[callbackKeyStr];
+}
+
+/*
+	returns true if all watched callbacks have been called
+*/
+Watcher.prototype.isCallbacksDone = function()
+{
+	for(var i=0; i &lt; this._callbacksDone.length; ++i)
 	{
-		if(!this.callbacksDone[i]){return false;}
+		if(!this._callbacksDone[i]){return false;}
 	}
 	
 	return true;
 }
 
-Watcher.prototype.getCallbackArgs = function(callbackKeyStr) // public
+Watcher.prototype._onCallback = function(index, callbackKeyStr, args)
 {
-	return this.callbackArgsByKey[callbackKeyStr];
+	this._callbacksDone[index] = true;
+	this._callbackArgs[index] = args;
+	this._callbackArgsByKey[callbackKeyStr] = args;
+	this._checkIfDone();
 }
 
-Watcher.prototype.onCallback = function(index, callbackKeyStr, args)
+Watcher.prototype._checkIfDone = function()
 {
-	this.callbacksDone[index] = true;
-	this.callbackArgs[index] = args;
-	this.callbackArgsByKey[callbackKeyStr] = args;
-	this.checkIfDone();
-}
-
-Watcher.prototype.checkIfDone = function()
-{
-	if(!this.started || !this.isCallbacksDone()){return false;}
-	if(this.doneEvent){this.doneEvent.apply(null, [this.callbackArgs]);}
+	if(!this._started || !this.isCallbacksDone()){return false;}
+	if(this.doneEvent){this.doneEvent.apply(null, [this._callbackArgs]);}
 	return true;
 }
+
 		</code></pre>
 	</div>
 
