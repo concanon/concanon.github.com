@@ -10,11 +10,13 @@
 body {
 	margin: 8px 8px;
 	padding: 0;
-	border: 0;
-	font-size: 18px;
-	font-family: sans-serif;
-	background-color: #dddddd;
+	border: 0;	
+	font-family: serif;
+	font-size: 20px;
+	letter-spacing: 1px;
 	color: #222;
+	background-color: #fefefe;
+	line-height: 1.4;
 }
 
 a {
@@ -185,6 +187,7 @@ code {
 <script>hljs.initHighlightingOnLoad();</script>
 <script src="../../js-weber/lib/Utils.js"></script>
 <script src="../../js-weber/lib/LongTime.js"></script>
+<script src="js/lib_S2C_FunctorDemo.js"></script>
 </head>
 <body>
 
@@ -204,31 +207,33 @@ code {
 
 	<h1 id="docTitle">Portfolio</h1>
 	
-	<div class="both-sides">
-		<h1>HTML5 Applications</h1>
+	<div class="mainArea">
+		<h1>Educational HTML5 Canvas/WebGL Video Games</h1>
 		<p>
-			Demonstrations of HTML5 apps I have made are available in person&mdash;please
+			Demonstrations of educational video games are available in person only. Please
 			schedule a meeting with me to review them.
 		</p>
 
 		<p>
-			HTML5 app features include:
+			Features include:
 		</p>
 		
 		<p>
 			<ul>
-				<li>Image viewer and editor with touch screen zoom and pan.</li>
 				<li>Animated, interactive sprites with physics motion.</li>
 				<li>Drag and drop items.</li>
 				<li>Music, speech and sound effects.</li>
+				<li>Image viewer and text overlay editor with touch screen zoom and pan.</li>
 				<li>Educational games for mobile devices.</li>
 			</ul>
 		</p>
 	</div>
 	
+	<hr>
+	
 	<div class="both-sides">
-		<h1>Educational HTML5 Games for Children</h1>
-		Below are educational children's games I programmed with JavaScript, HTML5 & CSS.
+		<h1>Educational Games for Children</h1>
+		Below are screenshots of educational children's games made with JavaScript, HTML5 & CSS.
 		They run on iPad and desktop browsers.
 		<br><br>
 	</div>
@@ -260,23 +265,25 @@ code {
 		</div>
 	</div>
 	
+	<hr>
+	
 	<div class="both-sides">
 		<h1>Commercial Website Development</h1>
-		JavaScript, HTML & CSS
+		Website front ends developed in JavaScript, HTML & CSS. 
 		<br><br>
 	</div>
 
 	<div class="webItemArea">
 		<div class="webGallery-imageBox">
 			<a href="/portfolio/images/visalus/klarity-page-desktop.jpg" target="_blank"><img src="/portfolio/images/visalus/klarity-desktop-tn.jpg"></a><br>
-			<div class="caption">Desktop View<br>ViSalus Sciences Product Marketing</div>
+			<div class="caption">Desktop View (click for large)<br>ViSalus Sciences Product Marketing</div>
 		</div>
 	</div>
 	
 	<div class="webItemArea">
 		<div class="webGallery-imageBox">
 			<a href="/portfolio/images/visalus/klarity-page-mobile.jpg" target="_blank"><img src="/portfolio/images/visalus/klarity-mobile-tn.jpg"></a><br>
-			<div class="caption">Mobile View<br>ViSalus Sciences Product Marketing</div>
+			<div class="caption">Mobile View (click for large)<br>ViSalus Sciences Product Marketing</div>
 		</div>
 	</div>
 	
@@ -291,10 +298,118 @@ code {
 		<h1><a class="bookmark" name="code-samples">Code Samples</a></h1>
 	</div>
 	
+	<hr>
+	
 	<div class="both-sides">
-		<h2>JS Watcher Demo</h2>
+		<h2>JavaScript Functors (Function Objects) Demo</h2>
+		
 		<p>
-			A Watcher is a JavaScript object which I invented for callback based programming.
+			One meaning of the word functor is a function object. This is an object which may be invoked as if it were a function.
+		</p>
+		<p>
+			The following code will create a functor:
+		</p>
+		
+		<pre><code class="javascript">
+function makeFunctor(data, fn)
+{
+	var newFn = function(){return fn.apply(newFn, arguments);};
+	for(var k in data){newFn[k] = data[k];}
+	return newFn;
+}
+		</code></pre>
+		
+		<div class="basicDemoArea demoArea">
+			<h3>Basic Functor Demo</h3>
+			The following code is a basic demonstration of a functor:
+		
+			<pre><code class="javascript">
+function basicFunctorDemo()
+{
+	var adder = makeFunctor({a: 0, b: 0}, function(){return this.a + this.b;});
+	
+	alert('The result of adder() is: ' + adder());
+	
+	adder.a = 2;
+	adder.b = 3;
+	
+	alert('The new result of adder() is: ' + adder());
+}
+			</code></pre>
+
+			<button onclick="getLib_S2C_CodeSamplesPage().basicFunctorDemo();">Run Basic Functor Demo</button>
+
+		</div>
+		
+		
+		<div class="buttonsDemo demoArea">
+			<h3>Using Functors to Solve Problems with Iteratively Creating Event Handler Functions</h3>
+		
+			<div class="buttonArea buttonArea1">
+				<h4>The Problem</h4>
+				These three buttons are initialized with the following code. 
+				There is an error because each event handler function 
+				uses the variable i, however i is declared in the scope of initButtonArea1, 
+				and will therefore have the same value within each of the event handler functions.
+				Each button will say "Performing action #3" instead of performing separate actions as desired.
+				
+				<pre><code class="javascript">
+function initButtonArea1()
+{
+	var buttonAreaElt = document.getElementsByClassName('functorsArea')[0].getElementsByClassName('buttonArea')[0];
+	var btnElts = buttonAreaElt.getElementsByTagName('button');
+	
+	for(var i=0; i < 3; ++i)
+	{
+		btnElts[i].addEventListener('click', function(){alert('Performing action #' + i);});
+	}
+}
+				</code></pre>
+				
+				<button>Button 1</button>
+				<button>Button 2</button>
+				<button>Button 3</button>			
+				
+			</div>
+			
+			<div class="buttonArea buttonArea2 demoArea">
+				<h4>The Solution with Functors</h4>
+				Using a functor solves this issue, because each functor has its own copy of i. 
+				These buttons work as expected.
+				
+				<pre><code class="javascript">
+function initButtonArea2()
+{
+	var buttonAreaElt = document.getElementsByClassName('functorsArea')[0].getElementsByClassName('buttonArea')[1];
+	var btnElts = buttonAreaElt.getElementsByTagName('button');
+	
+	for(var i=0; i < 3; ++i)
+	{
+		btnElts[i].addEventListener('click', 
+			makeFunctor(
+				{i: i},
+				function(){alert('Performing action #' + this.i);}
+			)
+		);
+	}
+}
+				</code></pre>
+			
+				<button>Button 1</button>
+				<button>Button 2</button>
+				<button>Button 3</button>
+			</div>
+		</div>
+	</div>
+	
+	<hr>
+	
+	<div class="both-sides">
+		<h2>JavaScript "Watcher" Demo</h2>
+		<p>
+			A Watcher is a JavaScript object which was invented for callback based programming.
+		</p>
+		<p>
 			Suppose you have three processes, P1, P2, and P3, and you want to begin running
 			P1 and P2, then run P3 only after P1 and P2 have completed. 
 			A Watcher can accomplish this task by "watching" P1 and P2. 
@@ -323,6 +438,26 @@ code {
 			A Watcher is used as follows:
 		</p>
 		<pre><code class="javascript">
+		
+function WatcherDemo()
+{
+	this.running = false;
+}
+
+WatcherDemo.prototype.startProcess = function(processNum, callback)
+{
+	var elt = document.getElementById('watcher-div' + processNum);
+	var durationMs = 1250 + Math.round(Math.random() * 3000);
+	elt.style.transitionProperty = 'left';
+	elt.style.transitionDuration = durationMs + 'ms';
+	elt.style.left = '200px';
+	var result = 'P' + processNum + ' result in ' + durationMs + 'ms time';
+	
+	if(callback){
+		setTimeout(function(){callback(result);}, durationMs);
+	}
+}
+
 WatcherDemo.prototype.step1 = function()
 {
 	var cbThis = this;
@@ -342,15 +477,23 @@ WatcherDemo.prototype.step2 = function()
 	conElt.innerHTML += 'Starting P3&lt;br&gt;';
 	this.startProcess(3, function(){cbThis.step3();});
 }
+
+WatcherDemo.prototype.step3 = function()
+{
+	var conElt = document.getElementById('watcher-consoleArea');
+	conElt.innerHTML += 'Done';
+	this.running = false;
+	document.getElementById('watcher-startBtn').disabled = false;
+}
 		</code></pre>
 
 		<p>
-			Above, a watcher object is created, and used to create two callbacks.
+			Above, in step1, a watcher object is created, and used to create two callbacks.
 			Each callback is assigned a key string to identify it later.
-			After the callbacks are called, their arguments are retrieved
+			step2 is invoked by the watcher after processes 1 and 2 are completed.
+			Within step2, the arguments of the callbacks are retrieved
 			through the watcher's getCallbackArgs(callbackKeyStr) method which 
 			returns the arguments array.
-			View page source to review the full Watcher demo code.
 		</p>
 		
 		<p>
