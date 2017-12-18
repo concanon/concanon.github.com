@@ -1,7 +1,7 @@
 
-function getLib_S2C_CodeSamplesPage()
+function getLib_S2C_FunctorDemo()
 {
-	if(window.S2C_CodeSamplesPage){return S2C_CodeSamplesPage;}
+	if(window.S2C_FunctorDemo){return S2C_FunctorDemo;}
 
 	var utils = getLib_S2C_Utils();
 	var makeFunctor = utils.makeFunctor;
@@ -45,16 +45,13 @@ function getLib_S2C_CodeSamplesPage()
 		}
 	}
 	
-	
 	function init()
 	{
 		initButtonArea1();
 		initButtonArea2();
 	}
-
 	
-	
-	return window.S2C_CodeSamplesPage = {
+	return window.S2C_FunctorDemo = {
 		init: init,
 		basicFunctorDemo: basicFunctorDemo
 	};
